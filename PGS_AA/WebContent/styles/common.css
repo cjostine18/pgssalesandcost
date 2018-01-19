@@ -1,0 +1,164 @@
+/* CSS Document */
+*{ padding:0; margin:0;}
+ol,ul,li{ list-style:none;}
+a,img{ outline:none; border:0 none;}
+.clear{ clear:both; height:0px;}
+:focus{ outline:none;}
+a{ text-decoration:none;}
+
+body{ background:#dedbd7;}
+.header{height:147px; float:left; width:100%; background:#fff;}
+.role-header{height:117px; float:left; width:100%; background:#fff;}
+.wrapper{ width:100%; float:left;}
+.container{ width:980px; margin:0 auto;}
+.inner-container{ width:100%; float:left;}
+.shadow{ background:url(../images/shadow.png) repeat-x top; float:left; width:100%;}
+.disable{opacity:0.4; filter:alpha(opacity=40); /* For IE8 and earlier */}
+.disable-nav{ color:#b5ac9e;}
+
+/* BLUE HEADER STYLES */
+.top-links{ height:29px; background:#3B73B9; width:938px; float:left; padding:0 21px;}
+.top-links p{ color:#fff; letter-spacing:0.05em; font:10px/29px "GEInspiraPitchBold", Arial, Helvetica; text-transform:uppercase; float:left; padding:0 24px 0 0;}
+.top-links a{ color:#fff;}
+.top-links a:hover{ text-decoration:underline;}
+.top-links p.welcome{font:11px/29px "GEInspiraPitchItalic", Arial, Helvetica; text-transform:capitalize;}
+.top-links ul{ float:right;}
+.top-links ul li{letter-spacing:0.05em; font:10px/29px "GEInspiraPitchBold", Arial, Helvetica; text-transform:uppercase;padding:0 0 0 24px; float:left;}
+
+/* LOGO PANEL STYLES */
+.logo-panel{ height:59px; width:100%; float:left;}
+.role-logo-panel{height:88px; width:100%; float:left;}
+.logo{ padding:4px 0 0 21px;float:left;}
+.role-logo-panel .logo{ padding:20px 0 0 21px;}
+.logo span{ background:url(../images/ge_energy.png) no-repeat; width:140px; height:50px; display:block; text-indent:-999999999px;}
+/*.logo span:hover{ background-position:left -50px;}*/
+.logo-text{ float:left; padding:10px 0 0 100px; font:16px/20px "GEInspiraPitch", Arial, Helvetica;color:#3B73B9;}
+.role-logo-panel .logo-text{ padding:26px 0 0 100px;}
+.logo-text span{ padding:0 3px 0 0;}
+.logo-text big{ padding:0; font:20px/20px "GEInspiraPitch", Arial, Helvetica;}
+.logo-text small{ padding:0;font:14px/20px "GEInspiraPitch", Arial, Helvetica;}
+.quick-search{width:183px; height:25px; float:right; margin:20px 20px 0 0;color:#333; border:1px solid #9a9c94;}
+.quick-search .search{color:#968b7d; font:14px/23px "GEInspiraPitch", Arial, Helvetica; height:25px; padding:0 5px;width:148px; float:left;}
+.quick-search .search:focus{ background:none;}
+.quick-search input[type=image]{ padding:5px; float:left;}
+.pgs-portal{ width:146px; height:37px; float:right; background:url(../images/PGS_Portal_logo.png) no-repeat;text-indent:-999999999px; margin:7px 30px 0 0;}
+
+/* NAVIGATION STYLES */
+.nav{ float:left; width:100%;}
+.nav > ul{background:#a69b8d; height:29px; float:left; width:100%; }
+.nav > ul > li{ float:left; width:121px; position:relative; font:14px/29px "GEInspiraPitch", Arial, Helvetica; text-align:center;border-right:1px solid #8f8478;} 
+.nav > ul > li.lst{ border:0 none;}
+.nav > ul > li a{ color:#fff;width:121px; height:29px; display:block; }
+.nav > ul > li a:hover,.nav li a.active{ background:#91867a;}
+
+/* BREADCRUMB AND USER TOOLS STYLES */
+.breadcrumb{ height:30px; float:left; width:100%; background:#edeceb;}
+.breadcrumb h2{ float:left; color:#968b7d; font:13px/30px "GEInspiraPitch", Arial, Helvetica; text-indent:20px;}
+.breadcrumb h2 a{ color:#968b7d;}
+.breadcrumb h2 a:hover{color:#2b73b9; text-decoration:underline;}
+.user-tools{ float:right; width:284px;}
+.user-tools h2{ background:#91867a; color:#fff; display:none;}
+.user-tools .user-tool{  float:left;}
+.user-tools .user-tool-name{ display:none; color:#fff;}
+.user-tools ul{ float:right;}
+.user-tools .user-tool a{ margin:0 4px; background:url(../images/user_tools_sprite.png) no-repeat; width:33px; height:0px; padding:30px 0 0 0; display:block; overflow:hidden;}
+.user-tools .tools-print a{ background-position:-33px 0px;}
+.user-tools .tools-bookmark a{ background-position:-132px 0px;}
+
+/* COMMON CONTENT STYLES */
+.content{ width:980px; min-height:470px; background:#fff; float:left; padding-bottom:40px;}
+.content h4{ color:#968B7D;font:15px/30px "GEInspiraPitch", Arial, Helvetica; padding:40px 0 20px 21px;}
+.content h2{ background:#1ba7de; color:#fff; height:47px;font:18px/47px "GEInspiraPitch", Arial, Helvetica; text-indent:15px;}
+.home-content .form{ padding:40px 20px 20px 20px;font:13px/18px "GEInspiraPitch", Arial, Helvetica; float:left;}
+
+.tabs-wrapper{ float:left; width:100%; background:url(../images/tabs_head_bg.png) repeat-x top; margin:0; position:relative;}
+.tw1{ width:100%;}
+.tabs{ height:40px; float:left; margin:30px 0 0 0;}
+.tabs li{ float:left; height:40px; padding:0 1px 0 0;}
+.tabs li a{ padding:0 15px; min-width:87px; background:#a1a1a1; height:40px; display:block;font:13px/40px "GEInspiraPitchBold", Arial, Helvetica; color:#dcdcdc;}
+.tabs li a span{ float:right; cursor:pointer;}
+.tabs li a span.main{ float:left;}
+.tabs li a:hover,.tabs li a.selected{background:#e3e3e3; color:#898989; }
+.tab-content{ padding:15px 0 20px 0; float:left; width:100%;}
+.tab-inner{ padding:0 15px;}
+.tc{ display:none;}
+.sel{ display:block;}
+
+.model-box{ border:1px solid #E7E8EA; background:#F5F6F8; height:30px; float:left; width:930px; padding:0 10px; color:#968b7d;font:14px/30px "GEInspiraPitch", Arial, Helvetica;}
+.model-box label{ font-weight:bold;color:#968b7d!important;}
+.model-box span{ padding:0 50px 0 0;}
+
+.home-content table{ width:100%; float:left; background:#c7c5c3;font:13px/18px "GEInspiraPitch", Arial, Helvetica;}
+.home-content table th{ background:#3B73B9; height:30px; position:relative; color:#fff;font:Bold 13px/18px "GEInspiraPitchBold", Arial, Helvetica; text-align:left; padding:0 0 0 8px; cursor:pointer;}
+.recon th{font:13px/18px "GEInspiraPitch", Arial, Helvetica!important;}
+.home-content table th a{ padding:0 12px 0 0;color:#fff;}
+.home-content table th a.down-arrow{ background:url(../images/icons/down_arrow.png) no-repeat right 4px;}
+.home-content table th a.up-arrow{ background:url(../images/icons/up_arrow.png) no-repeat right 3px;}
+.home-content table td{ padding:5px 8px; background:#fff; color:#333;}
+.home-content table td a{color:#3B73B9; text-decoration:underline;}
+.home-content table td.reconcile a{color:#3B73B9; text-decoration:none;}
+.home-content table td.reconcile a b{ font-weight:normal; text-decoration:underline;}
+.home-content table td.sale{ background:#e8f6fa;}
+.home-content table tr.child td a{ padding:0 0 0 10px;}
+
+/*.home-content table tr.even td{ background:#fafafa;}*/
+.home-content tr:hover td,.home-content tr.selected td{ background:#edebe8!important;}
+.home-content tr:hover td div.radio span{ background-position: -150px -10px;}
+.home-content table th span{ float:left; padding:0; cursor:pointer; height:30px; line-height:30px;}
+.home-content table th span.arr{ padding:9px 0 0 5px; height:21px; width:5px;}
+.home-content table th span.rt-arrow{ display:none;padding:5px 0 0 7px; float:right; height:25px;}
+.home-content table th span a{ padding:0;}
+.home-content table th span a img{ padding:0 0 2px 0;}
+.home-content .icon{ height:30px; width:15px; float:right; border-left:1px solid #a7def2; margin:5px 0 0 10px;}
+.home-content .icon a{ padding:0;}
+.home-content .icon a.filter{ width:10px; height:10px; margin:2px 0 5px 5px; background:url(../images/icons/filter.png) no-repeat; text-indent:-9999em;  display:block;}
+.home-content .icon a.settings{ width:14px; height:14px; margin:0 0 0 3px; background:url(../images/icons/settings.png) no-repeat; text-indent:-9999em; display:block;}
+
+.home-content .paging{padding:20px 0 0 0; width:100%; color:#968b7d; font:Bold 13px/18px "GEInspiraPitchBold", Arial, Helvetica;}
+.home-content .paging a{ color:#968b7d;}
+.home-content .paging a.prev{ padding:0 20px 0 0; text-transform:uppercase;}
+.paging a.next{ padding:0 0 0 20px;text-transform:uppercase;}
+.home-content .paging a:hover{color:#3B73B9;}
+.home-content .paging span{font:Bold 16px/18px "GEInspiraPitchBold", Arial, Helvetica;color:#3B73B9;}
+.home-content .paging label{color:#968b7d;}
+.home-content .paging .lt{ float:left;}
+.home-content .paging .rt{ float:right;}
+.home-content .paging .rt label{ line-height:30px; height:30px; float:left; padding:0 5px 0 0;}
+.home-content .paging .rt input.selectbox{ width:80px; float:left; margin-right:0;}
+
+.home-content .list-hd{ padding:0 0 10px 0; float:left;font:Bold 15px/18px "GEInspiraPitchBold", Arial, Helvetica;color:#968b7d;}
+.home-content label{color:#3B73B9; padding:0 10px 0 0;}
+.home-content .list-hd b{ padding:0 30px 0 5px;}
+.home-content a.approve{ background:url(../images/icons/approve_enable.png) no-repeat left; padding:0 0 0 20px; margin:0 30px 0 0;color:#968b7d; }
+.home-content a.view{ background:url(../images/icons/view_details.png) no-repeat left; padding:0 0 0 21px; margin:0;color:#968b7d; }
+.home-content span.disable{background:url(../images/icons/approve_disable.png) no-repeat left; padding:0 0 0 20px; margin:0 30px 0 0; color:#b3b3b3;}
+.home-content div.radio span.checked{ background:url(../images/icons/active_radio.png) no-repeat 1px 1px!important;}
+.home-content div.radio span{ background:url(../images/icons/radio.png) no-repeat 0px 1px!important;}
+.home-content h1{font:20px/18px "GEInspiraPitch", Arial, Helvetica;color:#3B73B9; padding:0 0 10px 0;}
+
+.role-sel{}
+.role-sel form{ padding:40px 20px 20px;}
+.role-sel h1{ font:33px/18px "GEInspiraPitch", Arial, Helvetica;color:#3B73B9;}
+.role-sel h3{ font:14px/18px "GEInspiraPitch", Arial, Helvetica; color:#333; padding:15px 0 5px 0;}
+.role-sel h3 span{ color:#FF0000; padding:0 2px 0 0;}
+.role-sel input.selectbox{ color:#333; background:url(../images/ge_sprite_new.png) right -394px!important; width:325px; border-left:1px solid #9a9c94;}
+.role-sel div.selectbox-wrapper{margin: -12px 0px 0px 0px;}
+.role-sel div.button{ background-position:0 -886px;width:220px;font:12px/20px "GEInspiraPitch", Arial, Helvetica; margin:25px 0 0 0;}
+.role-sel div.button span{ background-position:right -801px; color:#fff; width:182px;}
+.role-sel div.button:hover{background-position:0 -930px;}
+.role-sel div.button:hover span{ background-position:right -845px;}
+
+.sel-box{ float:left; padding:20px 0 0 0; *padding-bottom:10px;}
+.finance input.selectbox{ float:left; color:#333; background:url(../images/ge_sprite_new.png) right -394px!important; width:145px; border-left:1px solid #9a9c94;}
+.finance #d1_container{margin: 30px 0px 0px 0px; *margin:50px 0 0 -323px;}
+.finance #d2_container{margin: 30px 0 0 169px; *margin:50px 0 0 -155px;}
+.finance .sel-box label{ float:left; line-height:30px; padding:0 5px 0 0;color:#333333!important;}
+
+.paging input.selectbox{ float:left; color:#333; background:url(../images/ge_sprite_new.png) right -394px!important; width:145px; border-left:1px solid #9a9c94;}
+.paging div.selectbox-wrapper{margin: -12px 0px 0px 0px;}
+
+/* FOOTER STYLES */
+.footer{ float:left; color:#968b7d; width:100%; font:12px/20px "GEInspiraPitch", Arial, Helvetica;}
+.footer p{ padding:10px 45px 10px 15px; float:left;}
+.footer p a{ color:#968b7d;}
+.footer p a:hover{color:#2b73b9;}
