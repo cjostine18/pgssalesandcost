@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>Role Selection</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script>
+	$(function() {
+		// Uniform form element decorator
+		$("input, checkbox").uniform();
+		$('select').selectbox();
+		//toggleElement('#adv-search-home-btn', '#search-filter');
+		//$('#offerings-filter .filter-item:eq(0)').click();
+		//$('.scrollbar').scrollbar();
+	});
+</script>
+</head>
+<body>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:sec="http://www.springframework.org/security/tags">
+<link href="./styles/common.css" type="text/css" rel="stylesheet"/>
+<link href="./styles/commonPagesStyle.css" type="text/css"
+	rel="stylesheet"/>
+<link href="./styles/lib/fonts.css" type="text/css" rel="stylesheet"/>
+<link href="./styles/lib/uniform.default.css" type="text/css"
+	rel="stylesheet"/>
+<link href="./styles/lib/selectbox.css" type="text/css" rel="stylesheet"/>
+<script src="./scripts/lib/jquery.min.js" type="text/javascript"
+	language="javascript"></script>
+<script src="./scripts/lib/jquery.uniform.min.js" type="text/javascript"
+	language="javascript"></script>
+<script src="./scripts/common.js" type="text/javascript"
+	language="jscript"></script>
+<script src="./scripts/lib/jquery.selectbox-0.5.js"
+	type="text/javascript" language="javascript"></script>
+	<f:view>
+		<div class="wrapper">
+			<div class="container">
+				<div class="inner-container">
+					<div class="role-header">
+						<div class="top-links">
+							<p class="welcome">
+								Welcome,
+								<sec:authentication property="principal.username" />
+							</p>
+							<p class="logout">
+								<h:form>
+									<h:commandLink value="LOGOUT" action="#{loginBean.exitApp }" />
+								</h:form>
+							</p>
+						</div>
+						<div class="role-logo-panel">
+							<h1 class="logo">
+								<span>GE Energy</span>
+							</h1>
+							<h2 class="logo-text">
+								<big class="left">Contract Financial Inputs Reconciliation Manager - ConFIRM</big>
+								<br/>
+								<small>Role Selection</small>
+							</h2>
+						</div>
+					</div>
+					<div class="content role-sel" style="height:600px;">
+						<div class="shadow home-content">
+							<h:form id="roleSel">
+								<h1>Role Selection</h1>
+								<h3><font color="red">*</font>Select your role from the list below:</h3>
+								<h:selectOneMenu id="roles" value="#{roleSelectionBean.roleId}"
+									valueChangeListener="#{roleSelectionBean.selectRole}"
+									immediate="true">
+									<f:selectItems value="#{roleSelectionBean.roleList}" />
+								</h:selectOneMenu>
+								<h:commandButton id="submit" value="Submit"
+									action="#{roleSelectionBean.submitRole}">
+								</h:commandButton>
+							</h:form>
+						</div>
+					</div>
+					<jsp:include page="/pages/commons/footer.jsp" />
+				</div>
+			</div>
+		</div>
+	</f:view>
+</body>
+</html>

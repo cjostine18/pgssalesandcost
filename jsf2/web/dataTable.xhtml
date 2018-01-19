@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<f:view>
+	<h:form>
+		<a4j:commandButton value="Load Data"
+			reRender="table" actionListener="#{dataTableBean.loadFeeTypes}" >
+			<f:param name="lineItemId" value="16" />
+			</a4j:commandButton>
+		<br />
+		<rich:extendedDataTable value="#{dataTableBean.feeTypes}" var="bean"
+			id="table" frozenColumns="1" style="height:300px; width:500px;"
+			selectionMode="none">
+			<f:facet name="header">
+				<h:outputText value="feetypes" />
+			</f:facet>
+			<rich:column>
+				<f:facet name="header">
+					<h:outputText value="feeTypeId" />
+				</f:facet>
+				<h:outputText value="#{bean.feeTypeId}" />
+			</rich:column>
+			<rich:column>
+				<f:facet name="header">
+					<h:outputText value="feeTypeDesc" />
+				</f:facet>
+				<h:outputText value="#{bean.feeTypeDesc}" />
+			</rich:column>
+			<rich:column>
+				<f:facet name="header">
+					<h:outputText value="crtnDate" />
+				</f:facet>
+				<h:outputText value="#{bean.crtnDate}" />
+			</rich:column>
+			<rich:column>
+				<f:facet name="header">
+					<h:outputText value="crtdBy" />
+				</f:facet>
+				<h:outputText value="#{bean.crtdBy}" />
+			</rich:column>
+			<rich:column>
+				<f:facet name="header">
+					<h:outputText value="lstUpdtdDate" />
+				</f:facet>
+				<h:outputText value="#{bean.lstUpdtdDate}" />
+			</rich:column>
+			<rich:column>
+				<f:facet name="header">
+					<h:outputText value="activeFlag" />
+				</f:facet>
+				<h:outputText value="#{bean.activeFlag}" />
+			</rich:column>
+			<rich:column>
+				<f:facet name="header">
+					<h:outputText value="orderId" />
+				</f:facet>
+				<h:outputText value="#{bean.orderId}" />
+			</rich:column>
+		</rich:extendedDataTable>
+	</h:form>
+	</f:view>
+</ui:composition>

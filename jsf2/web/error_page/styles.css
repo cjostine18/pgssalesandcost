@@ -1,0 +1,219 @@
+body {
+	text-align: center;
+	font-size: 11px;
+	line-height: 15px;
+	font-family: arial, helvetica, san-serif;
+	color: #66667c;}
+
+#mast {
+text-align: left;
+width: 715px;
+padding: 0 0 25px 0;
+margin: 0;
+border-bottom: 1px solid #ccc;
+}
+
+a:link, a:visited {
+	color: #3B73B9;
+	text-decoration: none;}
+
+.link a:link, .link a:visited {
+	color: #3B73B9;}
+
+a.anchor:hover {
+	color: inherit;
+	text-decoration: none !important;}
+	
+a:hover, a:active, .link a:hover, .link a:active  {
+	color: #3B73B9;
+	text-decoration: underline;}
+
+
+
+#servers {
+        width: 100%;
+        border: 0;
+        padding: 0 0 1em 0;
+        margin-bottom: 1em;
+        background-color: #fff;
+        color: #333;
+        }
+#servers ul {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+                border: none;
+                }
+                
+#servers li {
+                border-bottom: 1px dotted #999;
+                margin: 0;
+                }
+#servers li a {
+                display: block;
+                padding: 5px 5px 5px 0.5em;
+                border: 0;
+                background-color: #fff;
+                color: #333;
+                text-decoration: none;
+                width: 100%;
+                }
+                
+#servers li b {
+                color: #3B73B9;
+                }
+
+html>body #servers li a {
+                width: auto;
+                }
+
+#servers li a:hover {
+				border: 0;
+                background-color: #eee;
+                color: #000;
+                }
+
+#logs {
+        width: 100%;
+        border: 0;
+        padding: 0 0 1em 0;
+        margin-bottom: 1em;
+        background-color: #fff;
+        color: #333;
+        }
+#logs ul {
+				list-style: none;
+                margin: 0;
+                padding: 0;
+                border: none;
+                }
+                
+#logs li {
+				
+                border-bottom: 1px dotted #999;
+                margin: 0;
+                }
+#logs li a {
+				background-image: url(./images/folder.gif);
+				background-position: 0 3px; 
+				background-repeat: no-repeat;
+                display: block;
+                padding: 5px 5px 5px 28px;
+                border: 0;
+                background-color: #fff;
+                color: #333;
+                text-decoration: none;
+                width: 100%;
+                }
+                
+#logs li b {
+                color: #3B73B9;
+                }
+
+html>body #logs li a {
+                width: auto;
+                }
+
+#logs li a:hover {
+				border: 0;
+                background-color: #eee;
+                color: #000;
+                }
+
+
+
+
+ul {
+margin: 1px 0 20px 1px;
+}
+	
+	#frame {
+		width:715px;
+		margin-right:auto;
+		margin-left:auto;
+		margin-top:32px;
+		padding:0px;
+		text-align:left;
+		border-bottom: 1px solid #ccc;
+		}
+
+	#footer {
+		width:715px;
+		margin-right:auto;
+		margin-left:auto;
+		margin-top:10px;
+		padding:0px;
+		text-align:justify;
+		border-bottom: 1px solid #ccc;
+		}
+	
+	#footer p {
+		padding: 8px 20px 8px 20px;
+		text-align:justify;
+		}
+		
+	#prop {
+	font-size: 9px;
+		margin: 0;
+		padding: 0;
+		text-align:center;
+		}
+		
+	#copyright {
+		width:715px;
+		margin-right:auto;
+		margin-left:auto;
+		margin-top:5px;
+		padding:0px;
+		text-align:left;
+		}	
+	#copyright p {
+		color: #999;
+		font-size: 9px;
+		padding-left: 20px;
+		}
+		
+		
+	#contentcenter {
+		margin-left: 40px;
+		margin-right: auto;
+		width:625px;
+		padding:0;
+		background:#fff;
+		}
+		
+	#contentcenter p {
+		margin: 25px 0 0 0px;
+		}
+
+	#contentcenterlogs {
+		margin-right:auto;
+		margin-left:200px;
+		width:325px;
+		padding:0;
+		background:#fff;
+		}
+		
+	#contentcenterlogs p {
+		margin: 25px 0 0 0px;
+		}
+		
+		
+		
+	p,h1,pre {
+		margin:0px 10px 10px 10px;
+		}
+		
+	h1 {
+		font-size:14px;
+		padding-top:10px;
+		}
+		
+.warn	{
+	color: #ff0000;
+	font-weight: bold;
+	}
+.warnnormal	{
+	color: #ff0000;
+	}
+form {margin: 0px;}

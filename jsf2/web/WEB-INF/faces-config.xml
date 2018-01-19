@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+
+	<!-- Added empty beans.xml so we can just use @Named instead -->
+	<managed-bean>
+		<managed-bean-name>hello</managed-bean-name>
+		<managed-bean-class>com.ge.example.richfaces.hello.jboss7.Bean</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+		<managed-property>
+			<property-name>text</property-name>
+			<value />
+		</managed-property>
+	</managed-bean>
+
+	<managed-bean>
+		<managed-bean-name>loginBean</managed-bean-name>
+		<managed-bean-class>com.ge.energy.confirm.controller.LoginBean</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+		<managed-property>
+			<property-name>roleSelectionService</property-name>
+			<value>#{roleSelectionService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>headerBean</property-name>
+			<value>#{headerBean}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>roleSelectionBean</property-name>
+			<value>#{roleSelectionBean}</value>
+		</managed-property>
+	</managed-bean>
+	<application>
+		<el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
+	</application>
+
+</faces-config>

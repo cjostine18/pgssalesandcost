@@ -1,0 +1,27 @@
+.common-content table{ width:100%; float:left; background:#c7c5c3;font:13px/18px "GEInspiraPitch", Arial, Helvetica;}
+.common-content table th{ background:#3B73B9; height:30px; position:relative; color:#fff;font:Bold 13px/18px "GEInspiraPitchBold", Arial, Helvetica;padding:0 0 0 8px; cursor:pointer;}
+.common-content table th a{ padding:0 12px 0 0;color:#fff;}
+.common-content table th a.down-arrow{ background:url(../images/icons/down_arrow.png) no-repeat right 4px;}
+.common-content table th a.up-arrow{ background:url(../images/icons/up_arrow.png) no-repeat right 3px;}
+.common-content table td{ padding:5px 8px; background:#fff; color:#333;}
+.common-content table td a{color:#3B73B9; text-decoration:underline;}
+.common-content table td.reconcile a{color:#3B73B9; text-decoration:none;}
+.common-content table td.reconcile a b{ font-weight:normal; text-decoration:underline;}
+.common-content table td.sale{ background:#e8f6fa;}
+.common-content table tr.child td a{ padding:0 0 0 10px;}
+.common-content table tr.grey td{ background:#f2f2f0;}
+
+/*.home-content table tr.even td{ background:#fafafa;}*/
+.common-content tr:hover td,.common-content tr.selected td{ background:#edebe8!important;}
+.common-content tr:hover td div.radio span{ background-position: -150px -10px;}
+.common-content table th span{ float:left; padding:0; cursor:pointer; height:30px; line-height:30px;}
+.common-content table th span.arr{ padding:9px 0 0 5px; height:21px; width:5px;}
+.common-content table th span.rt-arrow{ display:none;padding:5px 0 0 7px; float:right; height:25px; position:relative; z-index:1000;}
+.common-content table th span.rt-arrow > a{ display:block; background:url(../images/icons/hoverColHeader.png) no-repeat left; width:23px; height:19px; margin:0 1px 0 0;}
+.common-content table th span.rt-arrow > a:hover,.common-content table th span.rt-arrow > a.active{background:url(../images/icons/hoverColHeader-new.png) no-repeat left; height:25px;}
+.common-content table th span a{ padding:0;}
+.common-content table th span a img{ padding:0 0 2px 0;}
+.common-content .icon{ height:30px; width:15px; float:right; border-left:1px solid #a7def2; margin:5px 0 0 10px;}
+.common-content .icon a{ padding:0;}
+.common-content .icon a.filter{ width:10px; height:10px; margin:2px 0 5px 5px; background:url(../images/icons/filter.png) no-repeat; text-indent:-9999em;  display:block;}
+.common-content .icon a.settings{ width:14px; height:14px; margin:0 0 0 3px; background:url(../images/icons/settings.png) no-repeat; text-indent:-9999em; display:block;}

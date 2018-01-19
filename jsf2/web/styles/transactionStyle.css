@@ -1,0 +1,233 @@
+.groupPanel {
+	background: #3B73B9;
+}
+
+.theader {
+	background-color: #ECF4FE;
+}
+
+.modalPanelStyle {
+	overflow-y: auto;
+	overflow-x: hidden;
+	width: 325px;
+	height: 500px;
+	position: fixed;
+	left: 36%;
+	top: 25%;
+}
+
+.label {
+	position: fixed;
+	width: 10
+}
+
+.divInModalPanel {
+	border-style: solid;
+	border-color: #BED6F8;
+	width: 300;
+	height: 430;
+	align =: center
+}
+
+.textInModalPanel {
+	color: white;
+}
+
+.titleStyle {
+	text-indent: 17px;
+	float: left;
+	font: Bold 15px/18px 'GEInspiraPitchBold', Arial, Helvetica;
+	color: #3B73B9;
+}
+
+.dataTable {
+	margin: 100;
+	float: center;
+}
+
+.left {
+	float: left;
+}
+
+.center {
+	float: center;
+}
+
+.right {
+	float: right;
+}
+
+.white {
+	background: #FFFFFF;
+}
+
+.sale {
+	color: #000000;
+	background: #e8f6fa;
+}
+
+.label {
+	position: fixed;
+	width: 10;
+}
+
+.panelgrid {
+	padding-left: 18px;
+	width:100%;
+}
+
+.nonDisplay {
+	display: none;
+}
+
+.modalButton {
+	background-position: 0 -886px;
+	width: 80px;
+	font: 12px/20px "GEInspiraPitch", Arial, Helvetica;
+	/* margin: 55px 50px 50px 116px; */
+}
+
+.modalButtons {
+	background-position: 0 -886px;
+	font: 12px/20px "GEInspiraPitch", Arial, Helvetica;
+	/* margin: 55px 50px 50px 66px; */
+	text-align: center;
+}
+
+.datefontFirst {
+	font: 13px/18px "GEInspiraPitch", Arial, Helvetica;
+	padding-right: 5px;
+}
+
+.datefont {
+	font: 13px/18px "GEInspiraPitch", Arial, Helvetica;
+	padding-left: 10px;
+	padding-right: 5px;
+}
+
+.pageRecord {
+	text-align: left;
+	font:bold 13px/18px "GEInspiraPitchBold", Arial, Helvetica;
+	color:#968b7d;
+	padding-right: 5px;
+}
+
+.mxl {
+	width: 674px;
+	margin: 0 auto;
+	text-align: center;
+}
+
+.list-row1-background {
+	background: #FFFFFF;
+}
+
+.list-row2-background {
+	background: #F1F1F1
+}
+
+.listContentEven {
+	background-color: #E0FFFF;
+	text-align: center;
+}
+
+.listContentOdd {
+	background-color: #FFFFFF;
+	text-align: center;
+}
+
+.filterIcon {
+	height: 19px;
+	position: relative;
+	top: -3px;
+	float: right;
+}
+
+.filterFont {
+	font: 13px/18px '' GEInspiraPitch ', Arial, Helvetica;
+}
+
+.filterHeader {
+	white-space: nowrap;
+	text-align: left;
+	min-width: 100%;
+}
+
+.filterModel {
+	overflow-y: auto;
+	overflow-x: hidden;
+	width: 325px;
+	height: 320px;
+	position: fixed;
+	left: 36%;
+	top: 25%;
+}
+
+.radioGaap table {
+	float: left;
+	font: 13px/18px "GEInspiraPitch", Arial, Helvetica;
+}
+
+.filterSrch {
+	width: 160px;
+	height: 30px;
+	border-bottom-style: outset;
+	border-right-style: outset;
+}
+
+.selBoxdiv {
+	height: 240px;
+	width: 240px;
+	overflow-y: auto;
+	overflow-x: hidden
+}
+
+.selManyBox {
+	text-align: left;
+	width: 2400px
+}
+
+.filterPanel {
+	width: 322;
+	height: 440px;
+}
+
+.saveButton {
+	width: 100px;
+	font: 11px/20px "GEInspiraPitch", Arial, Helvetica;
+}
+
+.goButton {
+	width: 65px;
+	font: 11px/20px "GEInspiraPitch", Arial, Helvetica;
+	float:right;
+	vertical-align: bottom;
+}
+.reportButton {
+	width: 125px;
+	font: 11px/20px "GEInspiraPitch", Arial, Helvetica;
+}
+.reportGOButton {
+	width: 65px;
+	font: 11px/20px "GEInspiraPitch", Arial, Helvetica;
+}
+
+.grid{
+	width:130px;
+	margin:0 28px 10px 0;
+}
+.aduitLog{
+font:font:13px/18px "GEInspiraPitch", Arial, Helvetica;
+}
+.dr4Font{
+	float: left;
+	font: Bold 15px/18px 'GEInspiraPitchBold', Arial, Helvetica;
+	color: red;
+}
+.dr4Title{
+	float: left;
+	font: Bold 15px/18px 'GEInspiraPitchBold', Arial, Helvetica;
+	color: #3B73B9;
+	position:absolute;
+	margin:-20px 10px 10px 0px;
+}

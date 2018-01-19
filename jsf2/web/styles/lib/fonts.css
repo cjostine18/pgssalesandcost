@@ -1,0 +1,46 @@
+/* CSS Document */
+
+@font-face {
+    font-family: 'GEInspiraPitch';
+    src: url('../../fonts/eot/GEInspiraPitch.eot');
+    src: url('../../fonts/eot/GEInspiraPitch.eot?#iefix') format('embedded-opentype'),
+         url('../../fonts/ttf/GEInspiraPitch.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'GEInspiraPitchBold';
+    src: url('../../fonts/eot/GEInspiraPitchBold.eot');
+    src: url('../../fonts/eot/GEInspiraPitchBold.eot?#iefix') format('embedded-opentype'),
+         url('../../fonts/ttf/GEInspiraPitchBold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'GEInspiraPitchCnd';
+    src: url('../../fonts/eot/GEInspiraPitchCnd.eot');
+    src: url('../../fonts/eot/GEInspiraPitchCnd.eot?#iefix') format('embedded-opentype'),
+         url('../../fonts/ttf/GEInspiraPitchCnd.TTF') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'GEInspiraPitchCndIta';
+    src: url('../../fonts/eot/GEInspiraPitchCndIta.eot');
+    src: url('../../fonts/eot/GEInspiraPitchCndIta.eot?#iefix') format('embedded-opentype'),
+         url('../../fonts/ttf/GEInspiraPitchCndIta.TTF') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'GEInspiraPitchItalic';
+    src: url('../../fonts/eot/GEInspiraPitchItalic.eot');
+    src: url('../../fonts/eot/GEInspiraPitchItalic.eot?#iefix') format('embedded-opentype'),
+         url('../../fonts/ttf/GEInspiraPitchItalic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}

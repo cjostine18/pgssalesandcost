@@ -1,0 +1,3122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sqls>
+	<sql id="getSumByIdQuarter">
+		select
+		C.expndtrCtgryId as expndtrCtgryId,
+		SUM(D.gaapSlsAmt)
+		as totalGAAPSale,
+		SUM(D.gaapCstAmt) as totalGAAPCost,
+		SUM(D.statSlsAmt)
+		as totalSatSale,
+		SUM(D.statCstAmt) as totalSatcost
+		from ExpndtrCtgryLkp
+		C,
+		TranLnDtl D,
+		MgmtEnty E,
+		Model mdel
+		WHERE
+		D.expndtrCtgryLkp.expndtrCtgryId =
+		C.expndtrCtgryId
+		AND
+		D.mgmtEnty.mgmtEntyId = E.mgmtEntyId
+		AND mdel.modelId = E.model.modelId
+		AND mdel.modelId = ?
+		AND C.expndtrCtgryId= ?
+		AND D.glQtrDesc between ?
+		and ?
+		AND D.tskCd.tskCdId not in (87, 88, 89)
+		GROUP BY C.expndtrCtgryId
+		ORDER BY C.expndtrCtgryId
+	</sql>
+	<sql id="getRollupSumByIdQuarter">
+	select SUM(D.gaapSlsAmt) as totalGAAPSale,
+	       SUM(D.gaapCstAmt) as totalGAAPCost,
+	       SUM(D.statSlsAmt) as totalSatSale,
+	       SUM(D.statCstAmt) as totalSatcost
+	  from ExpndtrCtgryLkp C, TranLnDtl D, MgmtEnty E, Model mdel
+	 WHERE D.expndtrCtgryLkp.expndtrCtgryId = C.expndtrCtgryId
+	   AND D.mgmtEnty.mgmtEntyId = E.mgmtEntyId
+	   AND mdel.modelId = E.model.modelId
+	   AND mdel.modelId = ?
+	   AND D.glQtrDesc between ? and ?
+	   AND D.tskCd.tskCdId not in (87, 88, 89)
+	 ORDER BY C.expndtrCtgryId
+	</sql>
+
+	<sql id="getSumBaseByQuarter">
+		select
+		C.expndtrCtgryId as expndtrCtgryId,
+		SUM(D.bsNum) as
+		base,
+		SUM(D.amount) as amount,
+		SUM(D.saleTax)as saleTax
+		from
+		ExpndtrCtgryLkp C,
+		TranLnDtl D,
+		MgmtEnty E,
+		Model mdel
+		WHERE
+		D.expndtrCtgryLkp.expndtrCtgryId =C.expndtrCtgryId
+		AND
+		D.mgmtEnty.mgmtEntyId = E.mgmtEntyId
+		AND mdel.modelId = E.model.modelId
+		AND mdel.modelId = ?
+		AND C.expndtrCtgryId= ?
+		AND D.glCostQtr between ?
+		and ?
+		AND D.tskCd.tskCdId not in (87, 88, 89)
+		GROUP BY C.expndtrCtgryId
+		ORDER BY C.expndtrCtgryId
+	</sql>
+	
+	<sql id="getSumInvByQuarter">
+		select
+		C.expndtrCtgryId as expndtrCtgryId,
+		SUM(D.bsNum) as
+		base,
+		SUM(D.amount) as amount,
+		SUM(D.saleTax)as saleTax
+		from
+		ExpndtrCtgryLkp C,
+		TranLnDtl D,
+		MgmtEnty E,
+		Model mdel
+		WHERE
+		D.expndtrCtgryLkp.expndtrCtgryId =C.expndtrCtgryId
+		AND
+		D.mgmtEnty.mgmtEntyId = E.mgmtEntyId
+		AND mdel.modelId = E.model.modelId
+		AND mdel.modelId = ?
+		AND C.expndtrCtgryId= ?
+		AND D.glCostQtr between ?
+		and ?
+		AND D.tskCd.tskCdId not in (87, 88, 89)
+		GROUP BY C.expndtrCtgryId
+		ORDER BY C.expndtrCtgryId
+	</sql>
+
+	<sql id="getSumByInvQuarter">
+		select
+		m.modelId,
+		SUM(d.gaapSlsAmt) as totalGAAPSale,
+		SUM(d.gaapCstAmt) as totalGAAPCost,
+		SUM(d.statSlsAmt) as totalSatSale,
+		SUM(d.statCstAmt) as totalSatcost
+		from MgmtEnty as me,
+		Model as m,
+		BaseUser u,
+		MgmtEntyAsgnmnt mat,
+		TskCd t,
+		Project p,
+		PrchsOrdr po,
+		LegalEntity le,
+		TranLnDtl as d
+		left join d.equipment as eq
+		left join
+		eq.site as site
+		where me.model.modelId = m.modelId
+		and
+		d.mgmtEnty.mgmtEntyId = me.mgmtEntyId
+		and p.projId = d.project.projId
+		and mat.userByPrimaryUserId = u.userId
+		and me.mgmtEntyId =
+		mat.mgmtEnty.mgmtEntyId
+		and d.tskCd.tskCdId = t.tskCdId
+		and d.prchsOrdr
+		= po.prchsOrdrId
+		and p.projId = d.project
+		and le.lglEntyId =
+		me.legalEntity
+		and t.tskCdId in (87, 88, 89)
+		and m.modelId = ?
+		and d.glCostQtr
+		between ? and ?
+		and u.usrSsoId = ?
+		group by m.modelId
+	</sql>
+	<sql id="getSumInvertyQter">
+	select MODEL_ID,
+	SUM(GAAP_SLS_AMT),
+	SUM(GAAP_CST_AMT),
+	SUM(STAT_SLS_AMT),
+	SUM(STAT_CST_AMT)
+	from cnfm_get_financial_sum_global
+	where type_id = 2
+	group by MODEL_ID
+	</sql>
+
+	<sql id="findErpFinSum">
+	select MODEL_ID,
+	EXPNDTR_CTGRY_ID,
+	SUM(GAAP_SLS_AMT),
+	SUM(GAAP_CST_AMT),
+	SUM(STAT_SLS_AMT),
+	SUM(STAT_CST_AMT),
+	SUM(bs_num_amount)
+	from cnfm_get_financial_sum_global
+	where type_id = 1
+	and type_name = 'INCLUDED'
+	group by MODEL_ID, EXPNDTR_CTGRY_ID
+	order by EXPNDTR_CTGRY_ID
+
+	</sql>
+
+	<sql id="findErpExFinSum">
+	select MODEL_ID,
+	EXPNDTR_CTGRY_ID,
+	SUM(GAAP_SLS_AMT),
+	SUM(GAAP_CST_AMT),
+	SUM(STAT_SLS_AMT),
+	SUM(STAT_CST_AMT),
+	SUM(bs_num_amount)
+	from cnfm_get_financial_sum_global
+	where type_id = 1
+	and type_name = 'EXCLUDED'
+	group by MODEL_ID, EXPNDTR_CTGRY_ID
+	order by EXPNDTR_CTGRY_ID
+
+	</sql>
+
+	<sql id="findGlFinSum">
+		select Sum(case
+		when A.id.glAcctNum in (120030100, 120030101, 120030102, 120030103) then
+		case
+		when A.id.bal is null then
+		0.00
+		else
+		A.id.bal
+		end else 0.00 end) as glSales,
+		Sum(case
+		when A.id.glAcctNum in (120030100, 120030101, 120030102, 120030103) then
+		case
+		when A.id.bal is null then
+		0.00
+		else
+		A.id.bal
+		end else 0.00 end) as glCost,
+		Sum(case
+		when A.id.glAcctNum in (120030100, 120030103, 120030104) then
+		case
+		when A.id.bal is null then
+		0.00
+		else
+		A.id.bal
+		end else 0.00 end) as glStaSales,
+		Sum(case
+		when A.id.glAcctNum in (120030100, 120030103, 120030104) then
+		case
+		when A.id.bal is null then
+		0.00
+		else
+		A.id.bal
+		end else 0.00 end) as glStaCost
+		FROM GlBal A, MgmtEnty E
+		WHERE A.id.mgmtEntyId = E.mgmtEntyId
+		AND E.mgmtEntyId in (:meIds)
+		and A.id.periodName in (:peroids)
+	</sql>
+
+	<sql id="findReconByModelId">
+	SELECT modelId as modelId,
+	modelNum as modelNum,
+	meId as meId,
+	Me as Me,
+	NVL(erpsales, 0) as erpSales,
+	NVL(erpcost, 0) as erpCost,
+	NVL(billing, 0) as billing,
+	NVL(glsales, 0) as glSales,
+	NVL(glcost, 0) as glCost,
+	NVL(glBilling, 0) as glBilling,
+	NVL(CCMS.cntNum, 0) as cntNum,
+	NVL(sttsId, 0) as sttsId
+	FROM (SELECT CMS.MGMT_ENTY_ID, NVL(COUNT(*), 0) cntNum
+	FROM CNFM.CNFM_ME_STATUS CMS
+	WHERE CMS.FISCAL_MONTH BETWEEN ? AND ?
+	AND CMS.FISCALQTR = ?
+	AND CMS.FISCALYEAR = ?
+	GROUP BY CMS.MGMT_ENTY_ID) CCMS,
+	(select nvl(erp.modelID, gl.modelID) modelId,
+	nvl(erp.modelNum, gl.modelNum) modelNum,
+	nvl(erp.meId, gl.meId) meId,
+	nvl(erp.me, gl.me) Me,
+	NVL(ERP.erpSale, 0) as erpSales,
+	NVL(ERP.erpCost, 0) as erpCost,
+	NVL(ERP.billing, 0) as billing,
+	NVL(GL.glSale, 0) as glSales,
+	NVL(GL.glCost, 0) as glCost,
+	NVL(gl.glBilling, 0) as glBilling,
+	NVL(ERP.mgmt_enty_rcncltn_stts_id,
+	GL.mgmt_enty_rcncltn_stts_id) as sttsId
+	FROM (SELECT CM.MODEL_ID as modelID,
+	CM.MDL_NUM as modelNum,
+	CME.mgmt_enty_rcncltn_stts_id,
+	CME.MGMT_ENTY_ID as meId,
+	CME.MGMT_ENTY_NAME as me,
+	SUM(CTLD.GAAP_SLS_AMT) as erpSale,
+	SUM(CTLD.GAAP_CST_AMT) as erpCost,
+	SUM(nvl(CTLD.BS_NUM, 0.00) + nvl(CTLD.AMOUNT, 0.00)) AS billing
+	FROM CNFM.CNFM_MODEL CM,
+	CNFM.CNFM_MGMT_ENTY CME,
+	CNFM.CNFM_MGMT_ENTY_ASGNMNT CMEA,
+	CNFM.CNFM_USER CU,
+	CNFM.CNFM_TRAN_LN_DTL CTLD,
+	CNFM.CNFM_RCNCLTN_STATUS CRS
+	WHERE CM.MODEL_ID = CME.MODEL_ID
+	AND CME.MGMT_ENTY_ID = CTLD.MGMT_ENTY_ID
+	AND CM.MDL_RCNCLTN_STTS_ID = CRS.RCNCLTN_STTS_ID
+	AND CM.MODEL_ID = ?
+	AND CME.MGMT_ENTY_ID = CMEA.MGMT_ENTY_ID
+	AND CMEA.PRIMARY_USER_ID = CU.USER_ID
+	AND CU.USR_SSO_ID = ?
+	AND CTLD.GL_QTR_DESC BETWEEN ? AND ?
+	AND CTLD.tsk_cd_id not in (87, 88, 89)
+	GROUP BY CM.MODEL_ID,
+	CM.MDL_NUM,
+	CME.MGMT_ENTY_ID,
+	CME.MGMT_ENTY_NAME,
+	CME.mgmt_enty_rcncltn_stts_id) ERP
+
+	full outer join
+
+	(SELECT CM.MODEL_ID as modelID,
+	CM.MDL_NUM as modelNum,
+	CME.mgmt_enty_rcncltn_stts_id,
+	CME.MGMT_ENTY_ID as meId,
+	CME.MGMT_ENTY_NAME as me,
+	NVL(SUM(CASE
+	WHEN CGAEC.GAAP_STAT_FLAG = 'G' AND
+	CGAEC.SALES_COST_FLAG = 'S' THEN
+	(case
+	when cgd.GL_ACCT_NUM like '50%' or
+	cgd.GL_ACCT_NUM like '12%' then
+	(cgd.acct_cr - cgd.acct_dr)
+	else
+	(cgd.acct_dr - cgd.acct_cr)
+	end) END), 0) glSale,
+	NVL(SUM(CASE
+	WHEN CGAEC.GAAP_STAT_FLAG = 'G' AND
+	CGAEC.SALES_COST_FLAG = 'C' THEN
+	(case
+	when cgd.GL_ACCT_NUM like '50%' or
+	cgd.GL_ACCT_NUM like '12%' then
+	(cgd.acct_cr - cgd.acct_dr)
+	else
+	(cgd.acct_dr - cgd.acct_cr)
+	end) end), 0) glCost,
+	sum(case
+	when CGD.GL_ACCT_NUM = '120030103' then
+	(CGD.acct_cr - CGD.acct_dr)
+	end) glBilling
+	FROM CNFM.CNFM_MODEL CM,
+	CNFM.CNFM_MGMT_ENTY CME,
+	CNFM.CNFM_MGMT_ENTY_ASGNMNT CMEA,
+	CNFM.CNFM_USER CU,
+	CNFM.CNFM_GL_DTL CGD,
+	CNFM.CNFM_GL_ACCT_EXPNDTR_CTGR CGAEC,
+	CNFM.CNFM_RCNCLTN_STATUS CRS
+	WHERE CM.MODEL_ID = CME.MODEL_ID
+	AND CME.MGMT_ENTY_ID = CGD.MGMT_ENTY_ID
+	AND CM.MDL_RCNCLTN_STTS_ID = CRS.RCNCLTN_STTS_ID
+	AND CM.MODEL_ID = ?
+	AND CME.MGMT_ENTY_ID = CMEA.MGMT_ENTY_ID
+	AND CMEA.PRIMARY_USER_ID = CU.USER_ID
+	AND CU.USR_SSO_ID = ?
+	AND to_char(CGD.GL_ACCT_NUM) = CGAEC.GL_ACCT_NUM
+	AND CGD.period BETWEEN ? AND ?
+	GROUP BY CM.MODEL_ID,
+	CM.MDL_NUM,
+	CME.mgmt_enty_rcncltn_stts_id,
+	CME.MGMT_ENTY_ID,
+	CME.MGMT_ENTY_NAME) GL on ERP.modelID = GL.modelID
+	AND ERP.meId = GL.meId) full_outer
+	where full_outer.meId = CCMS.MGMT_ENTY_ID
+	order by full_outer.meId
+	</sql>
+
+	<sql id="findDetailList">
+		select
+          MGMT_ENTY_NAME,
+          ITM_DESC,
+          TRAN_NUM,
+          TRAN_DATE,
+          GL_QTR_DESC,
+          PRCHS_ORDR_NUM,
+          PO_DESCRIPTION,
+          TSK_CD_ID,
+          SUPPLIER_INVOICE_NUM,
+          ACTN_CD,
+          MARGIN_REVIEW_FLAG,
+          GAAP_SLS_AMT,
+          GAAP_CST_AMT,
+          STAT_SLS_AMT,
+          STAT_CST_AMT,
+          LINE_COMMENT,
+          OFS_EVENT_TYPE,
+          OFS_EVENT_ID,
+          OFS_EVENT_DESC,
+          PROJ_NUM,
+          ACCT_PYBL_INV_NUM,
+          ACCT_RCVBL_INV_NUM,
+          MDL_BUKT_ID,
+          CTLG_BUKT_ID,
+          EQPMNT_SER_NUM,
+          EXTWRK_BUS_RSN_ID,
+          CUST_PO_NUM,
+          FALL_OUT_IND,
+          MGMT_ENTY_ID,
+          CTLG_BUKT_NAME,
+          MDL_BUKT_NAME,
+          TSK_CD_NAME,
+          EXTRA_WRK_BUS_RSN_NAME,
+          TRAN_ID,
+          FINANCE_COMMENT,
+          CPM_COMMENT,
+          OPN_ITM_EXIST_FLG,
+          ACT_ITM_EXIST_FLG,
+          HIST_ERP_FLG,
+          OFS_EVENT_TYPE,
+          JOB_FSR_NUMBER,
+          OUT_IN_IND,
+          SUPPLIER_NAME,
+          SLS_ACCT_DBT_AMT,
+          SLS_ACCT_CRDT_AMT,
+          CST_ACCT_DBT_AMT,
+          CST_ACCT_CRDT_AMT,
+          RISK_ANALYST_COMMENT,
+          REVIEW_COMPLETE,
+          GL_COST_QTR, 
+          GL_SALES_QTR
+       from cnfm_get_part_global
+	</sql>
+
+	<sql id="findDetailReportList">
+	select ACCT_PYBL_INV_NUM,
+	ACCT_RCVBL_INV_NUM,
+	ACT_ITM_EXIST_FLG,
+	ACTN_CD,
+	ACTN_STTS_DESC,
+	AP_BILLER_BUC_CD,
+	BILLER_CNTCT_INFO_DESC,
+	BILL_TO_CNTRY_DESC,
+	BILL_TO_STATE_DESC,
+	BS_NUM,
+	BUC_NAME,
+	ctlg_bukt_name,
+	CNTRCTL_SRVCS_BUS_LN_CD,
+	CONTRACT_NUMBER,
+	CPM_COMMENT,
+	case
+	when length(CRTD_BY) = 9 and regexp_like(CRTD_BY,'^[[:digit:]]+$') then
+	Usr_Frst_Name || ',' || Usr_Lst_Name
+	else
+	CRTD_BY
+	end,
+	CRTN_DATE,
+	CS_LINE_TYPE,
+	CS_PO_NUM,
+	CS_RGN_DESC,
+	CS_SUBRGN_DESC,
+	CST_ACCT_CRDT_AMT,
+	CST_ACCT_DBT_AMT,
+	CST_MRGN_NUM,
+	CTGRY_DESC,
+	CUST_PO_NUM,
+	DOC_NUM,
+	EQPMNT_ID,
+	ERP_EVNT_DESC,
+	ERP_TRAN_STTS_VAL,
+	EXTRA_WRK_BUS_RSN_NAME,
+	EXTWRK_BUS_RSN_ID,
+	EXPNDTR_ITM_DATE,
+	EXT_WRK_SHP_TO_ST_DNS_ID,
+	FALL_OUT_IND,
+	FINANCE_COMMENT,
+	GAAP_CM_AMT,
+	GAAP_CST_AMT,
+	GAAP_SLS_AMT,
+	GL_BTCH_NAME,
+	GL_COST_DATE,
+	GL_JRNL_ENTRY_HDR_ID,
+	GL_JRNL_ENTRY_LN_ID,
+	GL_JRNL_SRC_NAME,
+	GL_QTR_DESC,
+	GL_SALES_DATE,
+	HDR_DESC,
+	HIST_ERP_FLG,
+	ICAM_CONTRACT_CM,
+	ICAM_MARGIN_RATE_STAT,
+	ICAM_MRGN_RT_AMT,
+	ICAM_PERSISTENT_ID,
+	IC_LE,
+	IC_ME,
+	IDENTIFIER_KEY,
+	INV_CTGRY_ID,
+	ITM_DESC,
+	JE_HEADER_LINE,
+	JOB_FSR_NUMBER,
+	JRNL_ENTRY_HDR_LN_CD,
+	MARGIN_REVIEW_FLAG,
+	MGMT_ENTY_NAME,
+	mdl_bukt_name,
+	MODEL_ID,
+	LINE_COMMENT,
+	LINE_NUMBER,
+	LIST_PR_AMT,
+	case
+	when length(LST_UPDTD_BY) = 9 and regexp_like(LST_UPDTD_BY,'^[[:digit:]]+$') then
+	Usr_Frst_Name || ',' || Usr_Lst_Name
+	else
+	LST_UPDTD_BY
+	end,
+	LST_UPDTD_DATE,
+	OFS_EVENT_DESC,
+	OFS_EVENT_END_DATE,
+	OFS_EVENT_ID,
+	OFS_EVENT_START_DATE,
+	OFS_EVENT_TYPE_NAME,
+	OPN_ITM_EXIST_FLG,
+	ORG_ID,
+	ORIG_TRAN_NUM,
+	OUT_IN_IND,
+	PO_DESCRIPTION,
+	PO_NUMBER,
+	PRCHS_ORDR_ID,
+	PR_LIST_ID,
+	PROJ_ID,
+	PUSH_TYPE_CD,
+	QTY_NUM,
+	REF_DESC,
+	SERVICES_CM,
+	SHP_TO_CNTRY_DESC,
+	SHP_TO_STATE_DESC,
+	SLS_ACCT_CRDT_AMT,
+	SLS_ACCT_DBT_AMT,
+	SOURCE_DATE_CREATED,
+	SRC_CODE,
+	STAT_CM_AMT,
+	STAT_CST_AMT,
+	STAT_SLS_AMT,
+	SUPPLIER_INVOICE_NUM,
+	SUPPLIER_NAME,
+	TSK_CD_ID,
+	TSK_CD_NAME,
+	TCHNLGY_CD,
+	TRAN_DATE,
+	TRAN_NUM,
+	TRAN_SRC_DESC,
+	TRNSFR_PR_ADDER_AMT,
+	TRNSFR_PR_AMT,
+	TRNSFR_PR_PCT,
+	VNDR_NAME,
+	expndtr_ctgry_txt,
+	lgl_enty_name,
+	eqpmnt_ser_num,
+	sls_acct_dbt_amt,
+	sls_acct_crdt_amt,
+	cst_acct_dbt_amt,
+	cst_acct_crdt_amt,
+    GL_SALES_QTR,
+    GL_COST_QTR
+	from cnfm_get_part_dload_global
+	</sql>
+
+	<sql id="findModelsBySSOID">
+		select mdl.model_id as modelId,
+		mdl.mdl_num as modelNum,
+		cust.cust_name as customer,
+		r.rcncltn_stts_desc as status,
+		cnt as meCount,
+		r.lst_updtd_by as details,
+		r.rcncltn_stts_id as statusId,
+    	NVL(CCMS.cntNum, 0) as cntNum,
+    	CASE  when r.rcncltn_stts_id in (1,2,3) then 'No' 
+			when r.rcncltn_stts_id &gt; 3 then 'Yes' 
+		end reconciled 
+		from CNFM.cnfm_model mdl,
+		CNFM.cnfm_customer cust,
+		CNFM.cnfm_rcncltn_status r,
+		(select model_id, count(distinct mgmt_enty_name) cnt
+		from CNFM.cnfm_mgmt_enty mgmt,
+		CNFM.cnfm_mgmt_enty_asgnmnt assgn,
+		CNFM.cnfm_user usr
+		where mgmt.mgmt_enty_id = assgn.mgmt_enty_id
+		and assgn.primary_user_id = usr.user_id
+		and usr.USR_SSO_ID = ?
+		group by model_id) mgmt,
+	    (SELECT CME.MODEL_ID,
+	    NVL(COUNT(*), 0) cntNum
+	    FROM CNFM.CNFM_ME_STATUS CMS,
+	    CNFM_MGMT_ENTY CME
+	    WHERE CMS.FISCAL_MONTH BETWEEN ? AND ?
+	    AND CMS.FISCALQTR=?
+	    AND CMS.FISCALYEAR=?
+	    AND CME.MGMT_ENTY_ID = CMS.MGMT_ENTY_ID
+	    GROUP BY CME.MODEL_ID) CCMS
+		where cust.cust_id = mdl.cust_id
+		and mgmt.model_id = mdl.model_id
+		and r.rcncltn_stts_id = mdl.mdl_rcncltn_stts_id
+    	and mgmt.model_id = CCMS.MODEL_ID(+)
+		order by mdl.model_id ,cnt
+
+	</sql>
+	<sql id="findMEsBySSOID">
+	select mgmt.mgmt_enty_id as meId,
+       mgmt.mgmt_enty_name as me,
+       mgmt.mgmt_enty_id,
+       site_name as site,
+       site.site_id,
+       c.mdl_num as modelNum,
+       u.usr_frst_name || ' ' || u.usr_lst_name as cpm,
+       legal.lgl_enty_name as legalEntity,
+       sum((select count(rowid)
+             from CNFM.cnfm_opn_itm opitem
+            where opitem.model_id = mgmt.model_id
+              and opitem.me_name = mgmt.mgmt_enty_name
+              and opitem.opn_status = 'O')) openItem,
+       c.model_id as modelId,
+       mgmt.mgmt_enty_rcncltn_stts_id as statusId,
+       r.rcncltn_stts_desc as status,
+       NVL(CCMS.cntNum, 0) as cntNum
+
+  from  CNFM.cnfm_model             c,
+       CNFM.cnfm_user              u,
+       CNFM.cnfm_mgmt_enty_asgnmnt ms,
+       CNFM.cnfm_legal_entity      legal,
+       CNFM.cnfm_rcncltn_status    r,
+       CNFM.cnfm_mgmt_enty         mgmt,
+       CNFM.cnfm_site              site,
+	    (SELECT CMS.MGMT_ENTY_ID,
+	    NVL(COUNT(*), 0) cntNum
+	    FROM CNFM.CNFM_ME_STATUS CMS
+	    WHERE CMS.FISCAL_MONTH BETWEEN ? AND ?
+	    AND CMS.FISCALQTR=?
+	    AND CMS.FISCALYEAR=?
+	    GROUP BY CMS.MGMT_ENTY_ID) CCMS
+
+ where mgmt.site_id = site.site_id
+   and ms.mgmt_enty_id = mgmt.mgmt_enty_id
+   and mgmt.mgmt_enty_id = CCMS.mgmt_enty_id(+)
+   and mgmt.model_id = c.model_id
+   and u.user_id = ms.primary_user_id
+   and mgmt.lgl_enty_id = legal.lgl_enty_id
+   and r.rcncltn_stts_id = c.mdl_rcncltn_stts_id
+   and u.usr_sso_id = ?
+ group by mgmt.mgmt_enty_name,
+          mgmt.mgmt_enty_id,
+          mgmt.mgmt_enty_rcncltn_stts_id,
+          site_name,
+          site.site_id,
+          c.mdl_num,
+          u.usr_frst_name || ' ' || u.usr_lst_name,
+          legal.lgl_enty_name,
+          c.model_id,
+          r.rcncltn_stts_desc,
+          CCMS.cntNum
+ order by c.model_id, mgmt_enty_name
+	</sql>
+	<sql id="findBillsByModelId">
+		select me.mgmtEntyName as me,
+		       d.itmDesc as itemDescription,
+		       d.tranNum as transactionNumber,
+		       d.tranDate as transactionDate,
+		       d.saleTax as salesTax,
+		       d.taskName as billingCode,
+		       d.glQtrDesc as glQuarter,
+		       d.invoiceNumber as invoiceNum,
+		       d.lineNumber as orderNum,
+		       d.marginReviewFlag as marginReviewFlag,
+		       d.bsNum as base,
+		       d.amount as amount,
+		       d.feeType.feeTypeId,
+		       d.tskCd.tskCdId,
+		       d.subFeeType.subFeeTypeId,
+		       pro.projTypeDesc,
+		       site.siteName,
+		       le.lglEntyName,
+		       d.fallOutInd,
+		       me.mgmtEntyId,
+		       d.mdlBukt.mdlBuktName,
+		       d.tskCd.tskCdName,
+		       d.tranId as tranId,
+		       d.feeType.feeTypeDesc,
+		       d.subFeeType.subFeeTypeDesc,
+		       d.opnItmExistFlg,
+		       d.actItmExistFlg,
+		       d.lineComment,
+		       d.cpmComment,
+		       d.financeComment,
+		       d.outInInd,
+		       d.invoiceDate as invoiceDate,
+		       d.supplierName,
+		       d.riskAnalystComment,
+		       d.reviewComplete,
+		       d.glSalesQtr,
+		       d.glCostQtr
+		  from Model           as m,
+		       TranLnDtl       as d,
+		       ExpndtrCtgryLkp as e,
+		       BaseUser        as u,
+		       MgmtEntyAsgnmnt as mat,
+		       Project         as pro,
+		       LegalEntity     as le,
+		       SubFeeType      as sub,
+		       FeeType         as fee,
+		       MgmtEnty        as me
+		  left join me.site as site
+		 where me.model.modelId = m.modelId
+		   and d.mgmtEnty.mgmtEntyId = me.mgmtEntyId
+		   and e.expndtrCtgryId = d.expndtrCtgryLkp.expndtrCtgryId
+		   and mat.userByPrimaryUserId = u.userId
+		   and me.mgmtEntyId = mat.mgmtEnty.mgmtEntyId
+		   and pro.projId = d.project
+		   and le.lglEntyId = me.legalEntity
+		   and d.subFeeType.subFeeTypeId = sub.subFeeTypeId
+		   and d.feeType.feeTypeId = fee.feeTypeId
+		   and m.modelId = ?
+		   and d.glCostQtr between ? and ?
+		   and u.usrSsoId = ?
+		   and d.tskCd.tskCdId not in (87, 88, 89)
+		   and e.expndtrCtgryId = 5
+		 order by me.mgmtEntyName, d.tranNum
+		
+	</sql>
+	<sql id="findInventoryByModelId">
+		select m.modelId,
+		me.mgmtEntyName as me,
+		<!-- pal -->
+		d.itmDesc as itemDescription,
+		d.tranNum as transactionNumber,
+		d.tranDate as transactionDate,
+		d.saleTax as salesTax,
+		d.csPoNum,
+		d.poDescription as csPoDesc,
+		d.supplierInvoiceNum,
+		d.tskCd.tskCdId,
+		d.actnCd as erpTransactionStatusFlag,
+		d.marginReviewFlag as marginReviewFlag,
+		d.gaapSlsAmt,
+		d.gaapCstAmt,
+		d.gaapCmAmt,
+		d.statSlsAmt,
+		d.statCstAmt,
+		d.statCmAmt,
+		d.ofsEventType,
+		d.ofsEventId,
+		d.ofsEventDesc,
+		p.projNum,
+		d.mdlBukt.mdlBuktId,
+		d.ctlgBukt.ctlgBuktId,
+		<!-- tsn -->
+		po.prchsOrdrId as csPoNumber,
+		p.projTypeDesc,
+		site.siteName,
+		le.lglEntyName,
+		d.acctRcvblInvNum as arInvoiceNumber,
+		d.acctPyblInvNum
+		as apInvoiceNumber,
+		d.fallOutInd,
+		me.mgmtEntyId,
+		t.tskCdName,
+		mb.mdlBuktName,
+		cb.ctlgBuktName,
+		eq.eqpmntSerNum,
+		d.tranId,
+		d.lineComment,
+		d.opnItmExistFlg,
+		d.actItmExistFlg,
+		ic.invCtgryId,
+		ic.invCtgryName,
+		d.outInInd,
+		d.supplierName
+		from MgmtEnty as me,
+		Model as m,
+		BaseUser u,
+		MgmtEntyAsgnmnt mat,
+		TskCd t,
+		Project p,
+		PrchsOrdr po,
+		LegalEntity le,
+		TranLnDtl as d
+		left join
+		d.equipment as eq
+		left join eq.site as site
+		left join d.mdlBukt as mb
+		left join d.ctlgBukt as cb
+		left join d.invCtgry as ic
+		where
+		me.model.modelId = m.modelId
+		and d.mgmtEnty.mgmtEntyId =me.mgmtEntyId
+		and p.projId = d.project.projId
+		and (mat.userByPrimaryUserId = u.userId
+		or u.userId = mat.userByBackupUserId)
+		and me.mgmtEntyId
+		=mat.mgmtEnty.mgmtEntyId
+		and d.tskCd.tskCdId = t.tskCdId
+		and d.prchsOrdr
+		= po.prchsOrdrId
+		and p.projId = d.project
+		and le.lglEntyId
+		=me.legalEntity
+		and t.tskCdId in (87, 88, 89)
+		and m.modelId = ?
+		and d.glCostQtr
+		between ? and ?
+		and u.usrSsoId = ?
+		order by me.mgmtEntyName
+
+	</sql>
+	<sql id="findInvAReportByModelId">
+		select
+		ctld.acctPyblInvNum as acctPyblInvNum,
+		ctld.acctRcvblInvNum as acctRcvblInvNum,
+		ctld.actItmExistFlg as actItmExistFlg,
+		ctld.actnCd as actnCd,
+		ctld.actnSttsDesc as actnSttsDesc,
+		ctld.apBillerBucCd as apBillerBucCd,
+		ctld.billerCntctInfoDesc as billerCntctInfoDesc,
+		ctld.billToCntryDesc as billToCntryDesc,
+		ctld.billToStateDesc as billToStateDesc,
+		ctld.bsNum as bsNum,
+		ctld.bucName as bucName,
+		cb.ctlgBuktId as catalogBucket,
+		ctld.cntrctlSrvcsBusLnCd as cntrctlSrvcsBusLnCd,
+		ctld.contractNumber as contractNumber,
+		ctld.cpmComment as cpmComments,
+		ctld.crtdBy as crtdBy,
+		ctld.crtnDate as crtnDate,
+		ctld.csLineType as csLineType,
+		ctld.csPoNum as csPoNum,
+		ctld.csRgnDesc as csRgnDesc,
+		ctld.csSubrgnDesc as csSubrgnDesc,
+		ctld.cstAcctCrdtAmt as cstAcctCrdtAmt,
+		ctld.cstAcctDbtAmt as cstAcctDbtAmt,
+		ctld.cstMrgnNum as cstMrgnNum,
+		ctld.ctgryDesc as ctgryDesc,
+		ctld.custPoNum as custPoNum,
+		ctld.docNum as docNum,
+		ctld.equipment as equipmentId,
+		ctld.erpEvntDesc as erpEvntDesc,
+		ctld.erpTranSttsVal as erpTranSttsVal,
+		ew.extraWrkBusRsnName as ewWrkBusrsnBussines,
+		ew.extwrkBusRsnId as ewWrkBusrsnID,
+		ctld.expndtrItmDate as expndtrItmDate,
+		ctld.extWrkShpToStDnsId as extWrkShpToStDnsId,
+		ctld.fallOutInd as falloutInd,
+		ctld.financeComment as financeComments,
+		ctld.gaapCmAmt as gaapCm,
+		ctld.gaapCstAmt as gaapCost,
+		ctld.gaapSlsAmt as gaapSale,
+		ctld.glBtchName as glBtchName,
+		ctld.glCostDate as glCostDate,
+		ctld.glJrnlEntryHdrId as glJrnlEntryHdrId,
+		ctld.glJrnlEntryLnId as glJrnlEntryLnId,
+		ctld.glJrnlSrcName as glJrnlSrcName,
+		ctld.glSalesDate as glSalesDate,
+		ctld.hdrDesc as hdrDesc,
+		ctld.histErpFlg as histErpFlg,
+		ctld.icamContractCm as icamContractCm,
+		ctld.icamMarginRateStat as icamMarginRateStat,
+		ctld.icamMrgnRtAmt as icamMrgnRtAmt,
+		ctld.icamPersistentId as icamPersistentId,
+		ctld.icLe as icLe,
+		ctld.icMe as icMe,
+		ctld.identifierKey as identifierKey,
+		ic.invCtgryId as invCtgryId,
+		ctld.itmDesc as itemDesc,
+		ctld.jeHeaderLine as jeHeaderLine,
+		ctld.jobFsrNumber as jobFsrNumber,
+		ctld.jrnlEntryHdrLnCd as jrnlEntryHdrLnCd,
+		ctld.marginReviewFlag as marginReviewFlag,
+		me.mgmtEntyId as me,
+		cmb.mdlBuktId as modelBucket,
+		cm.modelId as modelId,
+		ctld.lineComment as lineComment,
+		ctld.lineNumber as lineNumber,
+		ctld.listPrAmt as listPrAmt,
+		ctld.lstUpdtdBy as lstUpdtdBy,
+		ctld.lstUpdtdDate as lstUpdtdDate,
+		ctld.ofsEventDesc as ofsEventDesc,
+		ctld.ofsEventEndDate as ofsEventEndDate,
+		ctld.ofsEventId as ofsEventId,
+		ctld.ofsEventStartDate as ofsEventStartDate,
+		ctld.ofsEventTypeName as ofsEventTypeName,
+		ctld.opnItmExistFlg as opnItmExistFlg,
+		ctld.orgId as orgId,
+		ctld.origTranNum as origTranNum,
+		ctld.outInInd as outStandFlag,
+		ctld.poDescription as poDescription,
+		ctld.poNumber as poNumber,
+		cpo.prchsOrdrId as prchsOrdrId,
+		ctld.prListId as prListId,
+		cp.projId as projectId,
+		ctld.pushTypeCd as pushTypeCd,
+		ctld.qtyNum as qtyNum,
+		ctld.refDesc as refDesc,
+		ctld.servicesCm as servicesCm,
+		ctld.shpToCntryDesc as shpToCntryDesc,
+		ctld.shpToStateDesc as shpToStateDesc,
+		ctld.slsAcctCrdtAmt as slsAcctCrdtAmt,
+		ctld.slsAcctDbtAmt as slsAcctDbtAmt,
+		ctld.sourceDateCreated as sourceDateCreated,
+		ctld.srcCode as srcCode,
+		ctld.statCmAmt as statCm,
+		ctld.statCstAmt as statCost,
+		ctld.statSlsAmt as statSale,
+		ctld.supplierInvoiceNum as supplierInvoiceNum,
+		ctld.supplierName as supplierName,
+		ctd.tskCdId as taskCode,
+		ctld.taskName as taskName,
+		ctld.tchnlgyCd as tchnlgyCd,
+		ctld.tranDate as tranDate,
+		ctld.tranNum as tranNum,
+		ctld.tranSrcDesc as tranSrcDesc,
+		ctld.trnsfrPrAdderAmt as trnsfrPrAdderAmt,
+		ctld.trnsfrPrAmt as trnsfrPrAmt,
+		ctld.trnsfrPrPct as trnsfrPrPct,
+		ctld.vndrName as vndrName,
+		ctld.paExpndtrType as paExpndtrType,
+		ctld.glSalesQtr,
+		ctld.glCostQtr
+		from MgmtEnty as me,
+		Model as cm,
+		BaseUser u,
+		MgmtEntyAsgnmnt cme,
+		TskCd ctd,
+		Project cp,
+		PrchsOrdr cpo,
+		LegalEntity le,
+		TranLnDtl as ctld
+		lett join ctld.ewWrkBusrsn as ew
+		left join
+		ctld.equipment as eq
+		left join eq.site as site
+		left join ctld.mdlBukt as
+		cmb
+		left join ctld.ctlgBukt as cb
+		left join ctld.invCtgry as ic
+		where me.model.modelId = cm.modelId
+		and ctld.mgmtEnty.mgmtEntyId
+		=me.mgmtEntyId
+		and cp.projId = ctld.project.projId
+		and
+		(cme.userByPrimaryUserId = u.userId
+		or u.userId =
+		cme.userByBackupUserId)
+		and me.mgmtEntyId =cme.mgmtEnty.mgmtEntyId
+		and
+		ctld.tskCd.tskCdId = ctd.tskCdId
+		and ctld.prchsOrdr = cpo.prchsOrdrId
+		and cp.projId = ctld.project
+		and le.lglEntyId =me.legalEntity
+		and t.tskCdId in (87, 88, 89)
+		and cm.modelId = ?
+		and ctld.glCostQtr
+		between ? and ?
+		and u.usrSsoId = ?
+		order by me.mgmtEntyName
+	</sql>
+
+
+	<sql id="checkInvExistByModelId">
+		select count(*)
+		from MgmtEnty as me,
+		Model as m,
+		BaseUser u,
+		MgmtEntyAsgnmnt mat,
+		TskCd t,
+		Project p,
+		PrchsOrdr po,
+		LegalEntity le,
+		TranLnDtl as d
+		left join d.equipment as eq
+		left join eq.site as site
+		where me.model.modelId = m.modelId
+		and d.mgmtEnty.mgmtEntyId =
+		me.mgmtEntyId
+		and p.projId = d.project.projId
+		and
+		(mat.userByPrimaryUserId = u.userId
+		or u.userId =
+		mat.userByBackupUserId)
+		and me.mgmtEntyId =mat.mgmtEnty.mgmtEntyId
+		and
+		d.tskCd.tskCdId = t.tskCdId
+		and d.prchsOrdr = po.prchsOrdrId
+		and
+		p.projId = d.project
+		and le.lglEntyId =me.legalEntity
+		and t.tskCdId in (87, 88, 89)
+		and m.modelId = ?
+		and d.glCostQtr
+		between ?
+		and ?
+		and u.usrSsoId = ?
+		order by me.mgmtEntyId
+	</sql>
+
+	<sql id="findInParst">
+		select
+    MGMT_ENTY_NAME,
+    ITM_DESC,
+    TRAN_NUM,
+    TRAN_DATE,
+    EQPMNT_SER_NUM,
+    PRCHS_ORDR_NUM,
+    GAAP_SLS_AMT,
+    GAAP_CST_AMT,
+    GAAP_CM_AMT,
+    STAT_SLS_AMT,
+    STAT_CST_AMT,
+    ACCT_PYBL_INV_NUM,
+    ACCT_RCVBL_INV_NUM,
+    EXTWRK_BUS_RSN_ID,
+    CUST_PO_NUM,
+    PRTS_LN_NUM,
+    PRTS_SLS_ORDR_NUM,
+    MDL_BUKT_ID,
+    CTLG_BUKT_ID,
+    TSK_CD_ID,
+    PROJ_NUM,
+    MARGIN_REVIEW_FLAG,
+    LINE_COMMENT,
+    OFS_EVENT_TYPE,
+    OFS_EVENT_ID,
+    GL_QTR_DESC,
+    PO_DESCRIPTION,
+    SUPPLIER_INVOICE_NUM,
+    ACTN_CD,
+    FALL_OUT_IND,
+    MGMT_ENTY_ID,
+    MDL_BUKT_NAME,
+    CTLG_BUKT_NAME,
+    TSK_CD_NAME,
+    EXTRA_WRK_BUS_RSN_NAME,
+    TRAN_ID,
+    OFS_EVENT_DESC,
+    FINANCE_COMMENT,
+    CPM_COMMENT,
+    OPN_ITM_EXIST_FLG,
+    ACT_ITM_EXIST_FLG,
+    HIST_ERP_FLG,
+    OFS_EVENT_TYPE,
+    OUT_IN_IND,
+    SUPPLIER_NAME,
+    SLS_ACCT_DBT_AMT,
+    SLS_ACCT_CRDT_AMT,
+    CST_ACCT_DBT_AMT,
+    CST_ACCT_CRDT_AMT,
+    RISK_ANALYST_COMMENT,
+    REVIEW_COMPLETE,
+    GL_COST_QTR,
+    GL_SALES_QTR 
+   from cnfm_get_part_global
+	</sql>
+
+	<sql id="findInCS">
+		select
+          MGMT_ENTY_NAME,
+          ITM_DESC,
+          TRAN_NUM,
+          TRAN_DATE,
+          PRCHS_ORDR_NUM,
+          GAAP_SLS_AMT,
+          GAAP_CST_AMT,
+          GAAP_CM_AMT,
+          STAT_SLS_AMT,
+          STAT_CST_AMT,
+          FALL_OUT_IND,
+          ACCT_PYBL_INV_NUM,
+          ACCT_RCVBL_INV_NUM,
+          EXTWRK_BUS_RSN_ID,
+          CUST_PO_NUM,
+          MDL_BUKT_ID,
+          CTLG_BUKT_ID,
+          TSK_CD_ID,
+          PROJ_NUM,
+          OFS_EVENT_TYPE,
+          OFS_EVENT_ID,
+          EQPMNT_ID,
+          PO_DESCRIPTION,
+          SUPPLIER_INVOICE_NUM,
+          ACTN_CD,
+          GL_QTR_DESC,
+          MARGIN_REVIEW_FLAG,
+          LINE_COMMENT,
+          MGMT_ENTY_ID,
+          EQPMNT_SER_NUM,
+          MDL_BUKT_NAME,
+          CTLG_BUKT_NAME,
+          TSK_CD_NAME,
+          EXTRA_WRK_BUS_RSN_NAME,
+          OFS_EVENT_DESC,
+          CPM_COMMENT,
+          FINANCE_COMMENT,
+          TRAN_ID,
+          OPN_ITM_EXIST_FLG,
+          ACT_ITM_EXIST_FLG,
+          HIST_ERP_FLG,
+          OFS_EVENT_TYPE,
+          JOB_FSR_NUMBER,
+          OUT_IN_IND,
+          SUPPLIER_NAME,
+          SLS_ACCT_DBT_AMT,
+          SLS_ACCT_CRDT_AMT,
+          CST_ACCT_DBT_AMT,
+          CST_ACCT_CRDT_AMT,
+          RISK_ANALYST_COMMENT,
+          REVIEW_COMPLETE,
+          GL_COST_QTR,
+          GL_SALES_QTR
+       from cnfm_get_part_global
+	</sql>
+
+	<sql id="findCtgrByMdlMe">
+		SELECT concat(ME, ctrgid) as hidMe,
+		NVL(erpsales, 0) as erpSales,
+		NVL(erpcost, 0) as erpCost,
+		NVL(billing, 0) as billing,
+		NVL(glsales, 0) as glSales,
+		NVL(glcost, 0) as glCost,
+		NVL(glBilling, 0) as glBilling
+		FROM (select expndtr_ctgry_id, expndtr_ctgry_txt
+		from CNFM.CNFM_EXPNDTR_CTGRY_LKP
+		union
+		select to_number(6), to_char('INVENTORY') from dual) CECL,
+		(select nvl(erp.modelid, gl.modelid) Model_ID,
+		nvl(erp.meid, gl.meid) MEID,
+		nvl(erp.me, gl.me) ME,
+		nvl(erp.ctrgid, gl.ctrgid) ctrgid,
+		nvl(erp.erpsales, 0) erpsales,
+		nvl(erp.erpcost, 0) erpcost,
+		nvl(erp.billing, 0) billing,
+		nvl(gl.glsales, 0) glsales,
+		nvl(gl.glcost, 0) glcost,
+		nvl(gl.glBilling, 0) glBilling
+		from (SELECT CM.MODEL_ID as modelID,
+		CM.MDL_NUM as modelNum,
+		CME.MGMT_ENTY_ID as meId,
+		CME.MGMT_ENTY_NAME as me,
+		SUM(CTLD.GAAP_SLS_AMT) as erpSales,
+		SUM(CTLD.GAAP_CST_AMT) as erpCost,
+		SUM(nvl(CTLD.BS_NUM, 0.00) + nvl(CTLD.AMOUNT, 0.00)) AS billing,
+		CTLD.EXPNDTR_CTGRY_ID as ctrgId
+		FROM CNFM.CNFM_MODEL CM,
+		CNFM.CNFM_MGMT_ENTY CME,
+		CNFM.CNFM_MGMT_ENTY_ASGNMNT CMEA,
+		CNFM.CNFM_USER CU,
+		(select mgmt_enty_id,
+		decode(tsk_cd_id,
+		87,
+		6,
+		88,
+		6,
+		89,
+		6,
+		expndtr_ctgry_id) expndtr_ctgry_id,
+		tsk_cd_id,
+		gl_qtr_desc,
+		gaap_sls_amt,
+		gaap_cst_amt,
+		BS_NUM,
+		AMOUNT
+		from CNFM.CNFM_TRAN_LN_DTL) CTLD
+		WHERE CM.MODEL_ID = CME.MODEL_ID
+		AND CME.MGMT_ENTY_ID = CTLD.MGMT_ENTY_ID
+		AND CM.MODEL_ID = ?
+		AND CME.MGMT_ENTY_ID = CMEA.MGMT_ENTY_ID
+		and cme.mgmt_enty_name = ?
+		AND CMEA.PRIMARY_USER_ID = CU.USER_ID
+		AND CU.USR_SSO_ID = ?
+		AND CTLD.GL_QTR_DESC BETWEEN ? AND ?
+		GROUP BY CM.MODEL_ID,
+		CM.MDL_NUM,
+		CME.MGMT_ENTY_ID,
+		CME.MGMT_ENTY_NAME,
+		CTLD.EXPNDTR_CTGRY_ID) ERP
+	
+		full outer join
+	
+		(SELECT CM.MODEL_ID as modelID,
+		CM.MDL_NUM as modelNum,
+		CME.MGMT_ENTY_ID as meId,
+		CME.MGMT_ENTY_NAME as me,
+		NVL(SUM(CASE
+		WHEN CGAEC.GAAP_STAT_FLAG = 'G' AND
+		CGAEC.SALES_COST_FLAG = 'S' THEN
+		(case
+		when cgd.GL_ACCT_NUM like '50%' or
+		cgd.GL_ACCT_NUM like '12%' then
+		(cgd.acct_cr - cgd.acct_dr)
+		else
+		(cgd.acct_dr - cgd.acct_cr)
+		end) END), 0) glSales,
+		NVL(SUM(CASE
+		WHEN CGAEC.GAAP_STAT_FLAG = 'G' AND
+		CGAEC.SALES_COST_FLAG = 'C' THEN
+		(case
+		when cgd.GL_ACCT_NUM like '50%' or
+		cgd.GL_ACCT_NUM like '12%' then
+		(cgd.acct_cr - cgd.acct_dr)
+		else
+		(cgd.acct_dr - cgd.acct_cr)
+		end) end), 0) glCost,
+		sum(case
+		when CGD.GL_ACCT_NUM = '120030103' then
+		(CGD.acct_cr - CGD.acct_dr)
+		end) glBilling,
+		CGAEC.EXPNDTR_CTGRY_ID as ctrgId
+		FROM CNFM.CNFM_MODEL CM,
+		CNFM.CNFM_MGMT_ENTY CME,
+		CNFM.CNFM_MGMT_ENTY_ASGNMNT CMEA,
+		CNFM.CNFM_USER CU,
+		CNFM.CNFM_GL_DTL CGD,
+		CNFM.CNFM_GL_ACCT_EXPNDTR_CTGR CGAEC
+		WHERE CM.MODEL_ID = CME.MODEL_ID
+		AND CME.MGMT_ENTY_ID = CGD.MGMT_ENTY_ID
+		AND CM.MODEL_ID = ?
+		AND CME.MGMT_ENTY_ID = CMEA.MGMT_ENTY_ID
+		and cme.mgmt_enty_name = ?
+		AND CMEA.PRIMARY_USER_ID = CU.USER_ID
+		AND CU.USR_SSO_ID = ?
+		AND to_char(CGD.GL_ACCT_NUM) = CGAEC.GL_ACCT_NUM
+		AND CGD.PERIOD BETWEEN ? AND ?
+		GROUP BY CM.MODEL_ID,
+		CM.MDL_NUM,
+		CME.MGMT_ENTY_ID,
+		CME.MGMT_ENTY_NAME,
+		CGAEC.EXPNDTR_CTGRY_ID) GL on ERP.modelID = GL.modelID
+		AND ERP.meId = GL.meId
+		and ERP.ctrgId = GL.ctrgId) full_outer
+		where CECL.expndtr_ctgry_id = full_outer.ctrgid
+	</sql>
+
+	<sql id="findCtgrByMdlMeCtgr">
+	SELECT concat(ME, ctrgId) as hidMe,
+	NVL(erpsales, 0) as erpSales,
+	NVL(erpcost, 0) as erpCost,
+	NVL(billing, 0) as billing,
+	NVL(glsales, 0) as glSales,
+	NVL(glcost, 0) as glCost,
+	NVL(glBilling, 0) as glBilling
+	FROM (select expndtr_ctgry_id, expndtr_ctgry_txt
+	from CNFM.CNFM_EXPNDTR_CTGRY_LKP
+	union
+	select to_number(6), to_char('INVENTORY') from dual) CECL,
+	(select nvl(erp.me, gl.me) ME,
+	nvl(erp.ctrgId, gl.ctrgId) ctrgId,
+	nvl(erp.erpsales, 0) erpsales,
+	nvl(erp.erpcost, 0) erpcost,
+	nvl(erp.billing, 0) billing,
+	nvl(gl.glsales, 0) glsales,
+	nvl(gl.glcost, 0) glcost,
+	nvl(gl.glBilling, 0) glBilling
+	FROM (SELECT CM.MODEL_ID as modelID,
+	CM.MDL_NUM as modelNum,
+	CME.MGMT_ENTY_ID as meId,
+	CME.MGMT_ENTY_NAME as me,
+	SUM(CTLD.GAAP_SLS_AMT) as erpSales,
+	SUM(CTLD.GAAP_CST_AMT) as erpCost,
+	CTLD.EXPNDTR_CTGRY_ID as ctrgId,
+	SUM(nvl(CTLD.BS_NUM, 0.00) + nvl(CTLD.AMOUNT, 0.00)) AS billing
+	FROM CNFM.CNFM_MODEL CM,
+	CNFM.CNFM_MGMT_ENTY CME,
+	CNFM.CNFM_MGMT_ENTY_ASGNMNT CMEA,
+	CNFM.CNFM_USER CU,
+	(select mgmt_enty_id,
+	decode(tsk_cd_id,
+	87,
+	6,
+	88,
+	6,
+	89,
+	6,
+	expndtr_ctgry_id) expndtr_ctgry_id,
+	tsk_cd_id,
+	gl_qtr_desc,
+	gaap_sls_amt,
+	gaap_cst_amt,
+	BS_NUM,
+	AMOUNT
+	from CNFM.CNFM_TRAN_LN_DTL) CTLD
+	WHERE CM.MODEL_ID = CME.MODEL_ID
+	AND CME.MGMT_ENTY_ID = CTLD.MGMT_ENTY_ID
+	AND CM.MODEL_ID = ?
+	AND CME.MGMT_ENTY_ID = CMEA.MGMT_ENTY_ID
+	and cme.mgmt_enty_name = ?
+	AND CMEA.PRIMARY_USER_ID = CU.USER_ID
+	AND CTLD.EXPNDTR_CTGRY_ID = ?
+	AND CU.USR_SSO_ID = ?
+	AND CTLD.GL_QTR_DESC BETWEEN ? AND ?
+	GROUP BY CM.MODEL_ID,
+	CM.MDL_NUM,
+	CME.MGMT_ENTY_ID,
+	CME.MGMT_ENTY_NAME,
+	CTLD.EXPNDTR_CTGRY_ID) ERP
+
+	full outer join
+
+	(SELECT CM.MODEL_ID as modelID,
+	CM.MDL_NUM as modelNum,
+	CME.MGMT_ENTY_ID as meId,
+	CME.MGMT_ENTY_NAME as me,
+	NVL(SUM(CASE
+	WHEN CGAEC.GAAP_STAT_FLAG = 'G' AND
+	CGAEC.SALES_COST_FLAG = 'S' THEN
+	(case
+	when cgd.GL_ACCT_NUM like '50%' or
+	cgd.GL_ACCT_NUM like '12%' then
+	(cgd.acct_cr - cgd.acct_dr)
+	else
+	(cgd.acct_dr - cgd.acct_cr)
+	end) END), 0) glSales,
+	NVL(SUM(CASE
+	WHEN CGAEC.GAAP_STAT_FLAG = 'G' AND
+	CGAEC.SALES_COST_FLAG = 'C' THEN
+	(case
+	when cgd.GL_ACCT_NUM like '50%' or
+	cgd.GL_ACCT_NUM like '12%' then
+	(cgd.acct_cr - cgd.acct_dr)
+	else
+	(cgd.acct_dr - cgd.acct_cr)
+	end) end), 0) glCost,
+	NVL(sum(case
+	when CGD.GL_ACCT_NUM = '120030103' then
+	(CGD.acct_cr - CGD.acct_dr)
+	end),
+	0) glBilling,
+	CGAEC.EXPNDTR_CTGRY_ID as ctrgId
+	FROM CNFM.CNFM_MODEL CM,
+	CNFM.CNFM_MGMT_ENTY CME,
+	CNFM.CNFM_MGMT_ENTY_ASGNMNT CMEA,
+	CNFM.CNFM_USER CU,
+	CNFM.CNFM_GL_DTL CGD,
+	CNFM.CNFM_GL_ACCT_EXPNDTR_CTGR CGAEC
+	WHERE CM.MODEL_ID = CME.MODEL_ID
+	AND CME.MGMT_ENTY_ID = CGD.MGMT_ENTY_ID
+	AND CM.MODEL_ID = ?
+	AND CME.MGMT_ENTY_ID = CMEA.MGMT_ENTY_ID
+	and cme.mgmt_enty_name = ?
+	AND CMEA.PRIMARY_USER_ID = CU.USER_ID
+	AND CGAEC.EXPNDTR_CTGRY_ID = ?
+	AND CU.USR_SSO_ID = ?
+	AND to_char(CGD.GL_ACCT_NUM) = CGAEC.GL_ACCT_NUM
+	AND
+	CGD.PERIOD BETWEEN ? AND ?
+	GROUP BY CM.MODEL_ID,
+	CM.MDL_NUM,
+	CME.MGMT_ENTY_ID,
+	CME.MGMT_ENTY_NAME,
+	CGAEC.EXPNDTR_CTGRY_ID) GL on ERP.modelID = GL.modelID
+	AND ERP.meId = GL.meId
+	and ERP.ctrgId = GL.ctrgId) full_outer
+	where CECL.expndtr_ctgry_id = full_outer.ctrgId
+	</sql>
+
+	<sql id="findTranNumByMdlMe">
+		SELECT concat(CME.MGMT_ENTY_NAME, CTLD.EXPNDTR_CTGRY_ID) as
+		hidMe,
+		CTLD.TRAN_NUM AS tranNum,
+		SUM(NVL(CTLD.GAAP_SLS_AMT, 0)) as erpSales,
+		SUM(NVL(CTLD.GAAP_CST_AMT, 0)) as erpCost,
+		NVL(SUM(nvl(CTLD.BS_NUM,0.00) + nvl(CTLD.AMOUNT,0.00)),
+		0) AS billing
+		FROM
+		CNFM.CNFM_MODEL CM,
+		CNFM.CNFM_MGMT_ENTY
+		CME,
+		CNFM.CNFM_MGMT_ENTY_ASGNMNT CMEA,
+		CNFM.CNFM_USER
+		CU,
+		(select mgmt_enty_id,
+               decode(tsk_cd_id, 87, 6, 88, 6, 89, 6, expndtr_ctgry_id) expndtr_ctgry_id,
+               tsk_cd_id,
+               gl_qtr_desc,
+               gaap_sls_amt,
+               gaap_cst_amt,
+               BS_NUM,
+               AMOUNT,
+               TRAN_NUM
+          from CNFM.CNFM_TRAN_LN_DTL) CTLD
+		WHERE
+		CM.MODEL_ID = CME.MODEL_ID
+		AND
+		CME.MGMT_ENTY_ID =
+		CTLD.MGMT_ENTY_ID
+		AND
+		CM.MODEL_ID = ?
+		AND
+		CME.MGMT_ENTY_NAME = ?
+		AND
+		CTLD.EXPNDTR_CTGRY_ID = ?
+		AND CME.MGMT_ENTY_ID
+		= CMEA.MGMT_ENTY_ID
+		AND
+		CMEA.PRIMARY_USER_ID =
+		CU.USER_ID
+		AND
+		CU.USR_SSO_ID
+		= ?
+		AND CTLD.GL_QTR_DESC BETWEEN ? AND ?
+		GROUP BY
+		CME.MGMT_ENTY_NAME,CTLD.EXPNDTR_CTGRY_ID,CTLD.TRAN_NUM
+		order by CTLD.TRAN_NUM
+	</sql>
+
+	<sql id="findAcctNumByMdlMe">
+		SELECT concat(CME.MGMT_ENTY_NAME, CGAEC.EXPNDTR_CTGRY_ID)
+		as hidMe,
+		CGD.GL_ACCT_NUM as acctNum,
+		NVL(SUM(CASE WHEN
+		CGAEC.GAAP_STAT_FLAG = 'G'
+		AND CGAEC.SALES_COST_FLAG = 'S'
+		THEN
+		(case
+		when cgd.GL_ACCT_NUM like '50%' or cgd.GL_ACCT_NUM like '12%' then
+		(cgd.acct_cr - cgd.acct_dr)
+		else
+		(cgd.acct_dr - cgd.acct_cr)
+		end)
+		END), 0) glSales,
+		NVL(SUM(CASE WHEN CGAEC.GAAP_STAT_FLAG =
+		'G'
+		AND
+		CGAEC.SALES_COST_FLAG = 'C'
+		THEN (case
+		when cgd.GL_ACCT_NUM like '50%' or cgd.GL_ACCT_NUM like '12%' then
+		(cgd.acct_cr - cgd.acct_dr)
+		else
+		(cgd.acct_dr - cgd.acct_cr)
+		end) END), 0) glCost,
+		NVL(sum(case when CGD.GL_ACCT_NUM ='120030103' then
+		(CGD.acct_cr - CGD.acct_dr) end),0) glBilling
+		FROM
+		CNFM.CNFM_MODEL CM,
+		CNFM.CNFM_MGMT_ENTY CME,
+		CNFM.CNFM_MGMT_ENTY_ASGNMNT CMEA,
+		CNFM.CNFM_USER CU,
+		CNFM.CNFM_GL_DTL CGD,
+		CNFM.CNFM_GL_ACCT_EXPNDTR_CTGR CGAEC,
+		CNFM.CNFM_EXPNDTR_CTGRY_LKP CECL
+		WHERE CM.MODEL_ID = CME.MODEL_ID
+		AND
+		CME.MGMT_ENTY_ID = CGD.MGMT_ENTY_ID
+		AND CM.MODEL_ID = ?
+		AND
+		CME.MGMT_ENTY_NAME = ?
+		AND CGAEC.EXPNDTR_CTGRY_ID= ?
+		AND
+		CME.MGMT_ENTY_ID = CMEA.MGMT_ENTY_ID
+		AND CMEA.PRIMARY_USER_ID =
+		CU.USER_ID
+		AND CU.USR_SSO_ID = ?
+		AND to_char(CGD.GL_ACCT_NUM) =
+		CGAEC.GL_ACCT_NUM
+		AND CGAEC.EXPNDTR_CTGRY_ID=CECL.EXPNDTR_CTGRY_ID
+		AND
+		CGD.PERIOD BETWEEN ? AND ?
+		GROUP BY
+		CME.MGMT_ENTY_NAME,CGD.GL_ACCT_NUM,CGAEC.EXPNDTR_CTGRY_ID
+		order by CGD.GL_ACCT_NUM
+	</sql>
+
+	<sql id="findMeByUser">
+		select menty
+		from MgmtEnty as menty, MgmtEntyAsgnmnt
+		as
+		asgmn, BaseUser
+		as cnuser,Model as cm
+		where
+		asgmn.userByPrimaryUserId.userId = cnuser.userId
+		and menty.mgmtEntyId =
+		asgmn.mgmtEnty.mgmtEntyId
+		and cm.modelId = menty.model.modelId and
+		cm.modelId = :modelid
+		and cnuser.usrSsoId = :ssoId
+		order by menty.mgmtEntyName asc
+	</sql>
+
+	<sql id="getCostDataList">
+		select BATCH_ID,
+		ICAM_PERSISTENT_ID,
+		MODEL_ID,
+		SITE_NAME,
+		EQPMNT_SER_NUM,
+		to_char(OFS_EVENT_START_DATE, 'mm/dd/yyyy') OFS_EVENT_START_DATE,
+		OFS_EVENT_TYPE,
+		EXPNDTR_CTGRY_TXT,
+		MDL_BUKT_NAME,
+		CTLG_BUKT_NAME,
+		TSK_CD_NAME,
+		GAAP_SLS_AMT,
+		GAAP_CST_AMT,
+		FALL_OUT_IND,
+		ICAM_PROCESS_FLG,
+		ICAM_PROCESS_MSG,
+		ROLLUP_STATUS,
+		ROLLUP_ID,
+		to_char(TRAN_DATE, 'mm/dd/yyyy') TRAN_DATE,
+		OUT_IN_IND,
+		QTR_DESC,
+		TIME_STP
+		from cnfm.cnfm_icam_fin_data_stg
+		where MODEL_ID = ?
+		and QTR_DESC = ?
+	</sql>
+	
+	<sql id="getCostSchDataList">
+		select BATCH_ID,
+		ICAM_PERSISTENT_ID,
+		MODEL_ID,
+		SITE_NAME,
+		EQPMNT_SER_NUM,
+		to_char(OFS_EVENT_START_DATE, 'mm/dd/yyyy') OFS_EVENT_START_DATE,
+		OFS_EVENT_TYPE,
+		EXPNDTR_CTGRY_TXT,
+		MDL_BUKT_NAME,
+		CTLG_BUKT_NAME,
+		TSK_CD_NAME,
+		GAAP_SLS_AMT,
+		GAAP_CST_AMT,
+		FALL_OUT_IND,
+		ICAM_PROCESS_FLG,
+		ICAM_PROCESS_MSG,
+		ROLLUP_STATUS,
+		ROLLUP_ID,
+		to_char(TRAN_DATE, 'mm/dd/yyyy') TRAN_DATE,
+		OUT_IN_IND,
+		QTR_DESC,
+		TIME_STP
+		from cnfm.CNFM_ICAM_FIN_DATA_STG_SCH 
+	</sql>
+
+	<sql id="getBillPostDataList">
+		select
+		MDL_NUM,
+		BILL_YEAR,
+		MONTH_VAL,
+		QUARTER,
+		TASK_NAME,
+		BILL_AMOUNT,
+		ICAM_PROCESS_FLG,
+		ICAM_PROCESS_MSG,
+		RECORD_ID,
+		RECORD_STATUS,
+		TIME_STP,
+		BATCH_ID
+		from cnfm.cnfm_icam_bill_data_stg
+		where MDL_NUM = ?
+  		and  QUARTER = ?
+  		and  BILL_YEAR = ?
+	</sql>
+	
+	<sql id="getBillSchPostDataList">
+		select
+		MDL_NUM,
+		BILL_YEAR,
+		MONTH_VAL,
+		QUARTER,
+		TASK_NAME,
+		BILL_AMOUNT,
+		ICAM_PROCESS_FLG,
+		ICAM_PROCESS_MSG,
+		RECORD_ID,
+		RECORD_STATUS,
+		TIME_STP,
+		BATCH_ID
+		from cnfm.CNFM_ICAM_BILL_DATA_STG_SCH
+	</sql>
+
+	<sql id="findReconQtrList">
+		SELECT DISTINCT CGD.PERIOD
+		FROM
+		CNFM.CNFM_MODEL CM,
+		CNFM.CNFM_MGMT_ENTY
+		CME,
+		CNFM.CNFM_MGMT_ENTY_ASGNMNT CMEA,
+		CNFM.CNFM_USER CU,
+		CNFM.CNFM_GL_DTL CGD,
+		CNFM.CNFM_GL_ACCT_EXPNDTR_CTGR
+		CGAEC
+		WHERE CM.MODEL_ID = CME.MODEL_ID
+		AND
+		CME.MGMT_ENTY_ID =
+		CGD.MGMT_ENTY_ID
+		AND CM.MODEL_ID = ?
+		AND
+		CME.MGMT_ENTY_ID =
+		CMEA.MGMT_ENTY_ID
+		AND CMEA.PRIMARY_USER_ID =
+		CU.USER_ID
+		AND CU.USR_SSO_ID
+		= ?
+		AND to_char(CGD.GL_ACCT_NUM) =
+		CGAEC.GL_ACCT_NUM
+		ORDER BY CGD.PERIOD
+	</sql>
+
+	<sql id="findAuditLogList">
+		select audlog.crtnDate,
+		cnuser.usrFrstName,
+		cnuser.usrLstName,
+		audlog.mgmtEntyName,
+		audlog.modelId,
+		audlog.expndtrCtgryName,
+		audlog.tranId,
+		audlog.auditDesc,
+		audlog.fieldChanged,
+		audlog.oldVal,
+		audlog.nwVal
+		from AuditLog as audlog,
+		BaseUser as cnuser
+		where cnuser.usrSsoId = audlog.crtdBy
+		and
+		cnuser.usrSsoId = ?
+		order by audlog.crtnDate desc
+</sql>
+
+	<!-- Start getting ME status and ME status Detail -->
+	<sql id="findMeStatDtl">
+		SELECT CMSD.wrkFlowId,
+		CMSD.mgmtEnty.mgmtEntyId,
+		CMSD.fiscalMonth,
+		CMSD.fiscalqtr,
+		CMSD.fiscalyear,
+		CMSD.rcncltnStatus.rcncltnSttsId,
+		CMSD.approveSsoId,
+		CMSD.approveRoleId,
+		CMSD.approvedtimestamp,
+		CMSD.emailComments,
+		CMSD.crtnDate,
+		CMSD.crtdBy,
+		CMSD.lstUpdtdDate,
+		CMSD.lstUpdtdBy
+		FROM
+		MeStatusDtl CMSD
+		WHERE CMSD.wrkFlowId = ?
+	</sql>
+	<sql id="getOpenItemTypeList">
+		select itmTypeId as itmTypeId,
+		itmTypeDesc as itmTypeDesc
+		from OpenItemType
+	</sql>
+	<sql id="getOpenItemReasonList">
+		select reasonId as reasonId,
+		reasonDesc as reasonDesc,
+		openCloseInd as openCloseInd
+		from OpenItemReason
+		where openCloseInd=?
+	</sql>
+	<sql id="getActionReasonList">
+		select actReasonId as actReasonId,
+		actReasonDesc as
+		actReasonDesc,
+		actOpenCloseInd as actOpenCloseInd
+		from ActItemReason
+		where actOpenCloseInd=?
+	</sql>
+	<sql id="findMeStatus">
+		select mestatus0_.MGMT_ENTY_ID as col_0_0_,
+		mestatus0_.FISCAL_MONTH as col_1_0_,
+		mestatus0_.FISCALQTR as col_2_0_,
+		mestatus0_.FISCALYEAR as col_3_0_,
+		mestatus0_.RCNCLTN_STTS_ID as col_4_0_,
+		mestatus0_.WRK_FLOW_ID as col_5_0_,
+		mestatus0_.IS_LOCKED as col_6_0_,
+		mestatus0_.LASTUPDATEDATE as col_7_0_,
+		mestatus0_.LASTUPDATEBY as col_8_0_,
+		mestatus0_.CRTN_DATE as col_9_0_,
+		mestatus0_.CRTD_BY as col_10_0_,
+		mestatus0_.LST_UPDTD_DATE as col_11_0_,
+		mestatus0_.LST_UPDTD_BY as col_12_0_
+		from CNFM.CNFM_ME_STATUS mestatus0_
+		where mestatus0_.MGMT_ENTY_ID = ?
+		and (mestatus0_.FISCAL_MONTH between ? and ?)
+		and mestatus0_.FISCALQTR = ?
+		and mestatus0_.FISCALYEAR = ?
+	</sql>
+
+	<sql id="findMeStatDtlRcd">
+		SELECT COUNT(*)
+		FROM MeStatusDtl CMSD
+		WHERE
+		CMSD.mgmtEnty.mgmtEntyId = ?
+		<!-- AND CMSD.fiscalqtr = ? -->
+		AND CMSD.fiscalyear
+		= ?
+		AND CMSD.rcncltnStatus.rcncltnSttsId = ?
+	</sql>
+
+	<sql id="findMeStatusRcd">
+		SELECT COUNT(*)
+		FROM MeStatus CMS
+		WHERE CMS.id.mgmtEntyId = ?
+		AND CMS.id.fiscalMonth = ? AND CMS.id.fiscalqtr = ? 
+		AND
+		CMS.id.fiscalyear = ?
+	</sql>
+	<sql id="findMeStatApproveRcd">
+		SELECT COUNT(*)
+		FROM cnfm_me_status CMS
+		WHERE cms.mgmt_enty_id in(
+    	select cme.mgmt_enty_id from cnfm_mgmt_enty cme
+    	where cme.model_id = ?)
+    	and CMS.Mgmt_Enty_Id != ?
+		AND CMS.FISCALQTR = ? 
+		AND CMS.FISCALYEAR = ?
+    	and cms.rcncltn_stts_id &lt; ?
+	</sql>
+	<sql id="findTskCdByLineItemId">
+		SELECT DISTINCT tskCd.tskCdId,tskCd.tskCdName,tskCd.tskHistoryFlg
+		FROM
+		ExpTskBuktLkp e,TskCd tskCd
+		WHERE tskCd.tskCdId = e.tskCd.tskCdId
+		AND
+		tskCd.tskCdId not in (87, 88,89)
+	</sql>
+	<sql id="findTskCdByRollupLineItemId">
+		SELECT DISTINCT tskCd.tskCdId,tskCd.tskCdName,tskCd.tskHistoryFlg
+		FROM
+		ExpTskBuktLkp e,TskCd tskCd
+		WHERE tskCd.tskCdId = e.tskCd.tskCdId
+		
+	</sql>
+	<sql id="findTskCdByBillingItemId">
+		SELECT DISTINCT tskCd.tskCdId,tskCd.tskCdName,tskCd.tskHistoryFlg
+		 FROM
+		 TskCd
+		 tskCd
+		 WHERE tskCd.tskCdId not in (87, 88,89) and tskCd.tskHistoryFlg = 'N'
+		 ORDER BY tskCd.tskCdName
+	</sql>
+	<sql id="findMdlBuktByTskCdId">
+		SELECT DISTINCT m.mdlBuktId,m.mdlBuktName,m.mdlHistoryFlg
+		FROM ExpTskBuktLkp
+		e,MdlBukt m
+		WHERE m.mdlBuktId = e.mdlBukt.mdlBuktId
+      
+      </sql>
+	<sql id="findCtlgBuktItemId">
+		SELECT DISTINCT c.ctlgBuktId,c.ctlgBuktName,c.ctlgHistoryFlg
+		FROM
+		ExpTskBuktLkp e,CtlgBukt c
+		WHERE c.ctlgBuktId = e.ctlgBukt
+      </sql>
+	<sql id="findCtlgBuktByModbuk">
+		SELECT DISTINCT c.ctlgBuktId,c.ctlgBuktName,c.ctlgHistoryFlg
+		FROM
+		ExpTskBuktLkp e,CtlgBukt c
+		WHERE c.ctlgBuktId = e.ctlgBukt
+      </sql>
+	<sql id="findExtWorkBusReasonById">
+		select distinct bu.extwrkBusRsnId,bu.extraWrkBusRsnName
+		from EwExpndtrLkp lk,EwWrkBusrsn bu
+		where lk.ewWrkBusrsn.extwrkBusRsnId
+		= bu.extwrkBusRsnId
+		and bu.extwrkHistoryFlg = 'N'
+		and
+		lk.expndtrCtgryLkp.expndtrCtgryId = ?
+	  </sql>
+	<sql id="findAllInvCtgry">
+		select distinct inv.invCtgryId as invCtgryId,
+		inv.invCtgryName as invCtgryName
+		from InvCtgry as inv
+	  </sql>
+	<sql id="getActionItemList">
+		select mgenty.mgmtEntyName,
+		ctlkp.expndtrCtgryTxt,
+		acitm.actOpenQtr,
+		acitm.actOpenReason,
+		tskcd.tskCdName,
+		acitm.actOpenComment,
+		acitm.actCloseReason,
+		acitm.actCloseComment,
+		acitm.actCloseDate,
+		acitm.actCloseQtr,
+		acitm.actnItmId,
+		acitm.tranlnId,
+		acitm.modelId,
+		acitm.actStatus,
+		tranln.tranNum,
+		tranln.itmDesc,
+		acitm.crtdBy,
+		ctlkp.expndtrCtgryId
+		from MgmtEnty as mgenty,
+		TranLnDtl as tranln,
+		ActnItm as acitm,
+		TskCd as tskcd,
+		ExpndtrCtgryLkp as ctlkp
+		where mgenty.mgmtEntyId = tranln.mgmtEnty.mgmtEntyId
+		and tranln.tranId = acitm.tranlnId
+		and tranln.tskCd.tskCdId = tskcd.tskCdId
+		and tranln.expndtrCtgryLkp.expndtrCtgryId = ctlkp.expndtrCtgryId
+		and acitm.modelId = ?
+		and acitm.actStatus = ?
+		order by mgenty.mgmtEntyName,
+		acitm.actStatus,
+		ctlkp.expndtrCtgryTxt,
+		tranln.tranNum,
+		acitm.actnItmId
+		      		
+		      		
+		   
+		   
+	</sql>
+	<sql id="getOpenItemList">
+		select mgmtenty0_.MGMT_ENTY_NAME      as col_0_0_,
+       expndtrctg4_.EXPNDTR_CTGRY_TXT as col_1_0_,
+       opnitm2_.OPEN_QTR              as col_2_0_,
+       opnitm2_.OPEN_REASON           as col_3_0_,
+       tskcd3_.TSK_CD_NAME            as col_4_0_,
+       Round(opnitm2_.GAAP_SALES,5)            as col_5_0_,
+       Round(opnitm2_.GAAP_COST,5)            as col_6_0_,
+       opnitm2_.OPEN_COMMENT         as col_7_0_,
+       opnitm2_.CLOSE_REASON          as col_8_0_,
+       opnitm2_.CLOSE_COMMENT         as col_9_0_,
+       opnitm2_.CLOSE_DATE            as col_10_0_,
+       opnitm2_.OPN_ITM_ID            as col_11_0_,
+       opnitm2_.TRAN_ID               as col_12_0_,
+       opnitm2_.MODEL_ID              as col_13_0_,
+       opnitm2_.OPN_STATUS            as col_14_0_,
+       opnitm2_.ME_NAME               as col_15_0_,
+       opnitm2_.CRTD_BY               as col_16_0_,
+       opnitm2_.DEBIT_GL_AC_NO        as col_17_0_,
+       opnitm2_.CREDIT_GL_AC_NO       as col_18_0_,
+       tranlndtl1_.TRAN_NUM           as col_19_0_,
+       tranlndtl1_.ITM_DESC           as col_20_0_,
+       expndtrctg4_.EXPNDTR_CTGRY_ID  as col_21_0_,
+       tranlndtl1_.INVOICE_NUMBER     as col_22_0_,
+       opnitm2_.IMPACT_REVENUE        as col_23_0_,
+       opnitm2_.STAT_SALES            as col_24_0_, 
+       opnitm2_.STAT_COST             as col_25_0_,
+       opnitm2_.TOTAL_BILLING_TAX     as col_26_0_,
+       opnitm2_.BILLING_IMPACT_STAT   as col_27_0_,
+       opnitm2_.Billing_Amount        as col_28_0_,
+       opnitm2_.IMPACT_REVENUE_STAT  as col_29_0_
+  from CNFM.CNFM_MGMT_ENTY         mgmtenty0_,
+       CNFM.CNFM_TRAN_LN_DTL       tranlndtl1_,
+       CNFM.CNFM_OPN_ITM           opnitm2_,
+       CNFM.CNFM_TSK_CD            tskcd3_,
+       CNFM.CNFM_EXPNDTR_CTGRY_LKP expndtrctg4_
+ where tranlndtl1_.TRAN_ID = opnitm2_.TRAN_ID
+   and tranlndtl1_.TSK_CD_ID = tskcd3_.TSK_CD_ID
+   and tranlndtl1_.EXPNDTR_CTGRY_ID = expndtrctg4_.EXPNDTR_CTGRY_ID
+   and (opnitm2_.ME_NAME in
+       (select mgmtenty5_.MGMT_ENTY_NAME
+           from CNFM.CNFM_MGMT_ENTY mgmtenty5_
+          where mgmtenty5_.MODEL_ID = ?))
+   and opnitm2_.OPN_STATUS = ?
+   and opnitm2_.ME_NAME = mgmtenty0_.MGMT_ENTY_NAME
+   and opnitm2_.MODEL_ID = ?
+ order by mgmtenty0_.MGMT_ENTY_NAME,
+          opnitm2_.OPN_STATUS,
+          expndtrctg4_.EXPNDTR_CTGRY_TXT,
+          tranlndtl1_.TRAN_NUM,
+          opnitm2_.OPN_ITM_ID
+		   
+	</sql>
+	<sql id="findMEByLineItemId">
+	    select distinct mgmt.mgmt_enty_id, mgmt.mgmt_enty_name 
+	    from CNFM.cnfm_user u, CNFM.cnfm_mgmt_enty_asgnmnt ms, CNFM.cnfm_mgmt_enty mgmt 
+	    where ms.mgmt_enty_id = mgmt.mgmt_enty_id and u.user_id = ms.primary_user_id 
+	    and u.usr_sso_id = ? and mgmt.model_id =?
+	</sql>
+	<!-- and ms.isLocked = 'N' -->
+	<sql id="findProjectByItemId">
+		select distinct lnt.project.projId,
+		lnt.project.projNum from TranLnDtl lnt
+		where lnt.mgmtEnty.mgmtEntyId=?
+	</sql>
+	<sql id="findPchOrderByPchNum">
+		select ordr.prchsOrdrId,ordr.prchsOrdrNum
+		from PrchsOrdr ordr where ordr.prchsOrdrNum = '0'
+	</sql>
+	<sql id="findEquipmentTsn">
+		select equ.eqpmntId,equ.eqpmntSerNum
+		from Equipment equ where equ.eqpmntSerNum ='0'
+	</sql>
+	<sql id="findEquipments">
+		select eqm.eqpmntId, eqm.eqpmntSerNum from Equipment eqm
+	</sql>
+
+	<sql id="findStatNameById">
+		SELECT CRS.rcncltnSttsDesc
+		FROM RcncltnStatus CRS
+		WHERE CRS.rcncltnSttsId = ?
+	</sql>
+	<sql id="getOneOpenItem">
+		SELECT opnitm.MODEL_ID,
+		opnitm.ME_NAME,
+		opnitm.TRAN_ID,
+	 	tskcd.TSK_CD_NAME 
+		FROM  CNFM.CNFM_OPN_ITM  opnitm,
+		CNFM.CNFM_TRAN_LN_DTL       tran,
+		CNFM.CNFM_TSK_CD  tskcd
+		where opnitm.TRAN_ID=tran.TRAN_ID
+		and tran.TSK_CD_ID = tskcd.TSK_CD_ID
+		and opnitm.OPN_ITM_ID = ?
+	</sql>
+	
+	<sql id="getOneActionItem">
+		SELECT exp.EXPNDTR_CTGRY_TXT,
+		mgmt.MGMT_ENTY_NAME,
+		actitem.TRAN_ID,
+		actitem.ACT_OPEN_REASON,
+		actitem.ACT_OPEN_COMMENT
+		FROM  CNFM.CNFM_ACTN_ITM  actitem,
+		CNFM.CNFM_TRAN_LN_DTL       tran,
+		CNFM_EXPNDTR_CTGRY_LKP  exp,
+		CNFM.CNFM_MGMT_ENTY mgmt
+		where actitem.TRAN_ID=tran.TRAN_ID
+		and tran.EXPNDTR_CTGRY_ID = exp.EXPNDTR_CTGRY_ID
+		and tran.MGMT_ENTY_ID=mgmt.MGMT_ENTY_ID
+		and actitem.ACTN_ITM_ID = ?
+	</sql>
+	<sql id="findTskCdIdByTskCdName">
+		SELECT new
+		com.ge.energy.confirm.model.TskCd(m.tskCdId,m.tskCdName,m.tskHistoryFlg) FROM TskCd m
+		WHERE m.tskCdName = 
+	</sql>
+	<sql id="findMdlIdByMdlName">
+		SELECT new
+		com.ge.energy.confirm.model.MdlBukt(m.mdlBuktId,m.mdlBuktName,m.mdlHistoryFlg) FROM
+		MdlBukt m WHERE m.mdlBuktName = 
+	</sql>
+	<sql id="findCtlgBuktByName">
+		SELECT new
+		com.ge.energy.confirm.model.CtlgBukt(c.ctlgBuktId,c.ctlgBuktName,c.ctlgHistoryFlg) FROM
+		CtlgBukt c WHERE c.ctlgBuktName = 
+	</sql>
+	<sql id="findSubFeeTypeExceptNull">
+		FROM SubFeeType as sub WHERE sub.subFeeTypeDesc is not null and sub.activeFlag='Y' ORDER BY sub.orderId
+	</sql>
+	<sql id="findSubFeeTypeById">
+		FROM SubFeeType as sub WHERE sub.subFeeTypeId = ? and sub.activeFlag='Y' ORDER BY sub.orderId
+	</sql>
+	<sql id="findFeeTypeExceptNull">
+		FROM FeeType as fee WHERE fee.feeTypeDesc is not null and fee.activeFlag='Y' ORDER BY fee.orderId
+	</sql>
+	<sql id="findFeeTypeById">
+		FROM FeeType as sub WHERE sub.feeTypeId = ? and sub.activeFlag='Y' ORDER BY sub.orderId
+	</sql>
+	<sql id="findModelId">
+		select mgenty.model.mdlNum from MgmtEnty as mgenty where
+		mgenty.mgmtEntyId = ?
+	</sql>
+	<sql id="findModelIdByMe">
+		select mgenty.model.mdlNum from MgmtEnty as mgenty where mgenty.mgmtEntyName
+		= ?
+	</sql>
+	<!-- End getting ME status and ME status Detail -->
+	<sql id="findAllRollUps">
+
+	select rollupdtl0_.ICAM_PERSISTENT_ID as col_0_0_,
+       rollupdtl0_.MODEL_ID as col_1_0_,
+       model1_.MDL_NUM as col_2_0_,
+       site2_.SITE_NAME as col_3_0_,
+       equipment3_.EQPMNT_SER_NUM as col_4_0_,
+       expndtrctg4_.EXPNDTR_CTGRY_TXT as col_5_0_,
+       rollupdtl0_.OFS_EVENT_START_DATE as col_6_0_,
+       rollupdtl0_.OFS_EVENT_TYPE_NAME as col_7_0_,
+       mdlbukt5_.MDL_BUKT_NAME as col_8_0_,
+       ctlgbukt6_.CTLG_BUKT_NAME as col_9_0_,
+       tskcd7_.TSK_CD_NAME as col_10_0_,
+       decode(rollupdtl0_.rollup_status, 'D', 0, rollupdtl0_.GAAP_SLS_AMT) as col_11_0_,
+       decode(rollupdtl0_.rollup_status, 'D', 0, rollupdtl0_.GAAP_CST_AMT) as col_12_0_,
+       rollupdtl0_.FALL_OUT_IND as col_13_0_,
+       rollupdtl0_.OUT_IN_IND as col_14_0_,
+       rollupdtl0_.TRAN_DATE as col_15_0_,
+       rollupdtl0_.ROLLUP_STATUS as col_16_0_,
+       rollupdtl0_.ROLLUP_ID as col_17_0_,
+       (select count(rowid)
+          from cnfm_rollup_tran
+         where rollup_id = rollupdtl0_.rollup_id and rollup_status = 'N' or rollup_status = 'U' ) col_18_0_,
+         rollupdtl0_.QTR_DESC as qtr_desc
+  from CNFM.CNFM_ROLLUP_DTL        rollupdtl0_,
+       CNFM.CNFM_SITE              site2_,
+       CNFM.CNFM_EQUIPMENT         equipment3_,
+       CNFM.CNFM_EXPNDTR_CTGRY_LKP expndtrctg4_,
+       CNFM.CNFM_MDL_BUKT          mdlbukt5_,
+       CNFM.CNFM_CTLG_BUKT         ctlgbukt6_,
+       CNFM.CNFM_TSK_CD            tskcd7_,
+       CNFM.CNFM_MODEL             model1_
+ where rollupdtl0_.SITE_ID = site2_.SITE_ID
+   and rollupdtl0_.EQPMNT_ID = equipment3_.EQPMNT_ID(+)
+   and rollupdtl0_.EXPNDTR_CTGRY_ID = expndtrctg4_.EXPNDTR_CTGRY_ID
+   and rollupdtl0_.MDL_BUKT_ID = mdlbukt5_.MDL_BUKT_ID
+   and rollupdtl0_.CTLG_BUKT_ID = ctlgbukt6_.CTLG_BUKT_ID
+   and rollupdtl0_.TSK_CD_ID = tskcd7_.TSK_CD_ID
+   and model1_.MODEL_ID = rollupdtl0_.MODEL_ID
+   and model1_.MODEL_ID = ?
+   and (rollupdtl0_.QTR_DESC between ? and ?)
+
+	</sql>
+	<sql id="findRollupDtlVsByRollUpId">
+		select modelId,
+		me,
+		pal,
+		transactionNumber,
+		itemDescription,
+		taskCode,
+		modelBucket,
+		catalogBucket,
+		outstandingFlag,
+		falloutFlag,
+		gaapSales,
+		gaapCost,
+		rollupStatus,
+		rollUpId,
+		icam_persistent_id,
+		site_name,
+		eqpmnt_ser_num,
+		ofs_event_type_name,
+		ofs_event_start_date,
+		tran_date,
+		GL_qtr_desc,
+		tranId,
+		GL_COST_QTR as glCostQuarter,
+		GL_SALES_QTR as glSalesQuarter
+		from cnfm_get_rollup_tran_global
+   
+	</sql>
+	<sql id="findTotalByQuarter">
+		select
+		sum( rollupdtl0_.GAAP_SLS_AMT ),
+		sum( rollupdtl0_.GAAP_CST_AMT )
+		from
+		CNFM.CNFM_ROLLUP_DTL rollupdtl0_,
+		CNFM.CNFM_SITE site2_,
+		CNFM.CNFM_EQUIPMENT equipment3_,
+		CNFM.CNFM_EXPNDTR_CTGRY_LKP expndtrctg4_,
+		CNFM.CNFM_MDL_BUKT mdlbukt5_,
+		CNFM.CNFM_CTLG_BUKT ctlgbukt6_,
+		CNFM.CNFM_TSK_CD tskcd7_,
+		CNFM.CNFM_MODEL model1_
+		where
+		rollupdtl0_.SITE_ID=site2_.SITE_ID
+		and rollupdtl0_.EQPMNT_ID=equipment3_.EQPMNT_ID(+)
+		and rollupdtl0_.EXPNDTR_CTGRY_ID=expndtrctg4_.EXPNDTR_CTGRY_ID
+		and rollupdtl0_.MDL_BUKT_ID=mdlbukt5_.MDL_BUKT_ID
+		and rollupdtl0_.CTLG_BUKT_ID=ctlgbukt6_.CTLG_BUKT_ID
+		and rollupdtl0_.TSK_CD_ID=tskcd7_.TSK_CD_ID
+		and model1_.MODEL_ID=rollupdtl0_.MODEL_ID
+    	and rollupdtl0_.rollup_status != 'D'
+		and model1_.MODEL_ID=?
+		and (
+		rollupdtl0_.QTR_DESC between ? and ?
+		)
+	</sql>
+	<sql id="findCallCostStgToBsUPD">
+		update cnfm.cnfm_icam_fin_data_stg set icam_process_flg = ? where BATCH_ID =
+		?
+	</sql>
+	<sql id="findCallBillingStgToBsUPD">
+		update cnfm.cnfm_icam_bill_data_stg set icam_process_flg = ? where BATCH_ID
+		= ?
+	</sql>
+
+	<sql id="findBillReportByModelId">
+		select mgmtenty9_.MGMT_ENTY_NAME as col_0_0_,
+		tranlndtl1_.ITM_DESC as col_1_0_,
+		tranlndtl1_.TRAN_NUM as col_2_0_,
+		tranlndtl1_.TRAN_DATE as col_3_0_,
+		tranlndtl1_.SALE_TAX as col_4_0_,
+		tranlndtl1_.TASK_NAME as col_5_0_,
+		tranlndtl1_.GL_QTR_DESC as col_6_0_,
+		tranlndtl1_.INVOICE_NUMBER  as col_7_0_,
+		tranlndtl1_.LINE_NUMBER as col_8_0_,
+		tranlndtl1_.MARGIN_REVIEW_FLAG as col_9_0_,
+		tranlndtl1_.INVOICE_AMOUNT as col_10_0_,
+		tranlndtl1_.bs_num as col_11_0_,
+		tranlndtl1_.FEE_TYPE_ID as col_12_0_,
+		tranlndtl1_.TSK_CD_ID as col_13_0_,
+		tranlndtl1_.SUB_FEE_TYPE_ID as col_14_0_,
+		project5_.PROJ_TYPE_DESC as col_15_0_,
+		site10_.SITE_NAME as col_16_0_,
+		legalentit6_.LGL_ENTY_NAME as col_17_0_,
+		tranlndtl1_.FALL_OUT_IND as col_18_0_,
+		mgmtenty9_.MGMT_ENTY_ID as col_19_0_,
+		mdlbukt11_.MDL_BUKT_NAME as col_20_0_,
+		tskcd12_.TSK_CD_NAME as col_21_0_,
+		tranlndtl1_.TRAN_ID as col_22_0_,
+		feetype13_.FEE_TYPE_DESC as col_23_0_,
+		subfeetype14_.SUB_FEE_TYPE_DESC as col_24_0_,
+		tranlndtl1_.OPN_ITM_EXIST_FLG as col_25_0_,
+		tranlndtl1_.ACT_ITM_EXIST_FLG as col_26_0_,
+		tranlndtl1_.LINE_COMMENT as col_27_0_,
+		tranlndtl1_.CPM_COMMENT as col_28_0_,
+		tranlndtl1_.FINANCE_COMMENT as col_29_0_,
+		tranlndtl1_.OUT_IN_IND as col_30_0_,
+		expndtrctg2_.expndtr_ctgry_txt as col_31_0_,
+		tranlndtl1_.INVOICE_DATE as col_32_0_,
+		tranlndtl1_.AMOUNT as col_33_0_,
+		tranlndtl1_.INVOICE_AMOUNT as col_34_0_,
+		tranlndtl1_.ESCLTN_DESC as col_35_0_,
+		tranlndtl1_.SLS_TAX_AMT as col_36_0_,
+		tranlndtl1_.USE_TAX_AMT as col_37_0_,
+		case
+		when length(tranlndtl1_.crtd_by) = 9 and regexp_like(tranlndtl1_.crtd_by,'^[[:digit:]]+$') then
+		baseuser3_.USR_FRST_NAME || ',' || baseuser3_.USR_LST_NAME
+		else
+		tranlndtl1_.crtd_by
+		end as col_38_0_,
+		tranlndtl1_.CRTN_DATE as col_39_0_,
+		case
+		when length(tranlndtl1_.lst_updtd_by) = 9 and regexp_like(tranlndtl1_.lst_updtd_by,'^[[:digit:]]+$') then
+		baseuser3_.USR_FRST_NAME || ',' || baseuser3_.USR_LST_NAME
+		else
+		tranlndtl1_.lst_updtd_by
+		end as col_40_0_,
+		tranlndtl1_.LST_UPDTD_DATE as col_41_0_,
+    	tranlndtl1_.GL_SALES_QTR,
+    	tranlndtl1_.GL_COST_QTR
+		from CNFM.CNFM_MODEL model0_,
+		CNFM.CNFM_TRAN_LN_DTL tranlndtl1_,
+		CNFM.CNFM_MDL_BUKT mdlbukt11_,
+		CNFM.CNFM_TSK_CD tskcd12_,
+		CNFM.CNFM_FEE_TYPE feetype13_,
+		CNFM.CNFM_SUB_FEE_TYPE subfeetype14_,
+		CNFM.CNFM_EXPNDTR_CTGRY_LKP expndtrctg2_,
+		CNFM.CNFM_USER baseuser3_,
+		CNFM.CNFM_MGMT_ENTY_ASGNMNT mgmtentyas4_,
+		CNFM.CNFM_PROJECT project5_,
+		CNFM.CNFM_LEGAL_ENTITY legalentit6_,
+		CNFM.CNFM_SUB_FEE_TYPE subfeetype7_,
+		CNFM.CNFM_FEE_TYPE feetype8_,
+		CNFM.CNFM_MGMT_ENTY mgmtenty9_
+		left outer join CNFM.CNFM_SITE site10_ on mgmtenty9_.SITE_ID =
+		site10_.SITE_ID
+		where tranlndtl1_.MDL_BUKT_ID = mdlbukt11_.MDL_BUKT_ID
+		and tranlndtl1_.TSK_CD_ID = tskcd12_.TSK_CD_ID
+		and tranlndtl1_.FEE_TYPE_ID = feetype13_.FEE_TYPE_ID
+		and tranlndtl1_.SUB_FEE_TYPE_ID = subfeetype14_.SUB_FEE_TYPE_ID
+		and mgmtenty9_.MODEL_ID = model0_.MODEL_ID
+		and tranlndtl1_.MGMT_ENTY_ID = mgmtenty9_.MGMT_ENTY_ID
+		and expndtrctg2_.EXPNDTR_CTGRY_ID = tranlndtl1_.EXPNDTR_CTGRY_ID
+		and mgmtentyas4_.PRIMARY_USER_ID = baseuser3_.USER_ID
+		and mgmtenty9_.MGMT_ENTY_ID = mgmtentyas4_.MGMT_ENTY_ID
+		and project5_.PROJ_ID = tranlndtl1_.PROJ_ID
+		and legalentit6_.LGL_ENTY_ID = mgmtenty9_.LGL_ENTY_ID
+		and tranlndtl1_.SUB_FEE_TYPE_ID = subfeetype7_.SUB_FEE_TYPE_ID
+		and tranlndtl1_.FEE_TYPE_ID = feetype8_.FEE_TYPE_ID
+		and model0_.MODEL_ID = ?
+		and (tranlndtl1_.GL_COST_QTR between ? and ?)
+		and baseuser3_.USR_SSO_ID = ?
+		and (tranlndtl1_.TSK_CD_ID not in (87, 88, 89))
+		and expndtrctg2_.EXPNDTR_CTGRY_ID = 5
+		order by mgmtenty9_.MGMT_ENTY_ID
+	</sql>
+	<sql id="findInvReportByModelId">
+	select ACCT_PYBL_INV_NUM,
+       ACCT_RCVBL_INV_NUM,
+       ACT_ITM_EXIST_FLG,
+       ACTN_CD,
+       ACTN_STTS_DESC,
+       AP_BILLER_BUC_CD,
+       BILL_TO_CNTRY_DESC,
+       BILL_TO_STATE_DESC,
+       BILLER_CNTCT_INFO_DESC,
+       BS_NUM,
+       BUC_NAME,
+       ctlg_bukt_id,
+       CNTRCTL_SRVCS_BUS_LN_CD,
+       CONTRACT_NUMBER,
+       CPM_COMMENT,
+       case
+         when length(CRTD_BY) = 9 and regexp_like(CRTD_BY,'^[[:digit:]]+$') then
+          Usr_Frst_Name || ',' || Usr_Lst_Name
+         else
+          CRTD_BY
+       end as CRTD_BY,
+       
+       Usr_Frst_Name,
+       Usr_Lst_Name,
+       to_char(CRTN_DATE, 'mm/dd/yyyy'),
+       
+       CS_LINE_TYPE,
+       CS_PO_NUM,
+       CS_RGN_DESC,
+       CS_SUBRGN_DESC,
+       CST_ACCT_CRDT_AMT,
+       CST_ACCT_DBT_AMT,
+       CST_MRGN_NUM,
+       CTGRY_DESC,
+       CUST_PO_NUM,
+       DOC_NUM,
+       EQPMNT_ID,
+       ERP_EVNT_DESC,
+       ERP_TRAN_STTS_VAL,
+       EXPNDTR_ITM_DATE,
+       EXT_WRK_SHP_TO_ST_DNS_ID,
+       EXTRA_WRK_BUS_RSN_DESC,
+       EXTWRK_BUS_RSN_ID,
+       FALL_OUT_IND,
+       FINANCE_COMMENT,
+       GAAP_CM_AMT,
+       GAAP_CST_AMT,
+       GAAP_SLS_AMT,
+       GL_BTCH_NAME,
+       GL_COST_DATE,
+       GL_JRNL_ENTRY_HDR_ID,
+       GL_JRNL_ENTRY_LN_ID,
+       GL_JRNL_SRC_NAME,
+	   GL_QTR_DESC,
+       GL_SALES_DATE,
+       HDR_DESC,
+       HIST_ERP_FLG,
+       ICAM_CONTRACT_CM,
+       ICAM_MARGIN_RATE_STAT,
+       ICAM_MRGN_RT_AMT,
+       ICAM_PERSISTENT_ID,
+       IC_LE,
+       IC_ME,
+       IDENTIFIER_KEY,
+       INV_CTGRY_ID,
+       ITM_DESC,
+       JE_HEADER_LINE,
+       JOB_FSR_NUMBER,
+       JRNL_ENTRY_HDR_LN_CD,
+       MARGIN_REVIEW_FLAG,
+       MGMT_ENTY_NAME,
+       MDL_BUKT_NAME,
+       MODEL_ID,
+       LINE_COMMENT,
+       LINE_NUMBER,
+       LIST_PR_AMT,
+       LST_UPDTD_BY,
+       to_char(LST_UPDTD_DATE, 'mm/dd/yyyy'),
+       OFS_EVENT_DESC,
+       to_char(OFS_EVENT_END_DATE, 'mm/dd/yyyy'),
+       OFS_EVENT_ID,
+       to_char(OFS_EVENT_START_DATE, 'mm/dd/yyyy'),
+       OFS_EVENT_TYPE_NAME,
+       OPN_ITM_EXIST_FLG,
+       ORG_ID,
+       ORIG_TRAN_NUM,
+       OUT_IN_IND,
+       PO_DESCRIPTION,
+       PO_NUMBER,
+       PRCHS_ORDR_ID,
+       PR_LIST_ID,
+       PROJ_ID,
+       PUSH_TYPE_CD,
+       QTY_NUM,
+       REF_DESC,
+       SERVICES_CM,
+       SHP_TO_CNTRY_DESC,
+       SHP_TO_STATE_DESC,
+       SLS_ACCT_CRDT_AMT,
+       SLS_ACCT_DBT_AMT,
+       SOURCE_DATE_CREATED,
+       SRC_CODE,
+       STAT_CM_AMT,
+       STAT_CST_AMT,
+       STAT_SLS_AMT,
+       SUPPLIER_INVOICE_NUM,
+       SUPPLIER_NAME,
+       TSK_CD_ID,
+       TSK_CD_NAME,
+       TCHNLGY_CD,
+       TRAN_DATE,
+       TRAN_NUM,
+       TRAN_SRC_DESC,
+       TRNSFR_PR_ADDER_AMT,
+       TRNSFR_PR_AMT,
+       TRNSFR_PR_PCT,
+       VNDR_NAME,
+       PA_EXPNDTR_TYPE,
+       GL_COST_QTR,
+       GL_SALES_QTR
+  from cnfm_get_inv_dload_global
+	</sql>
+
+	<sql id="findInParstReport">
+	select MODEL_ID,
+	MGMT_ENTY_NAME ,
+	expndtr_ctgry_txt,
+	TRAN_NUM as col_2_0_,
+	to_char(TRAN_DATE, 'mm/dd/yyyy'),
+	GL_QTR_DESC,
+	ITM_DESC,
+	TSK_CD_NAME,
+	GAAP_SLS_AMT ,
+	GAAP_CST_AMT ,
+	GAAP_CM_AMT ,
+	STAT_SLS_AMT ,
+	STAT_CST_AMT ,
+	STAT_CM_AMT,
+	MDL_BUKT_NAME ,
+	CTLG_BUKT_NAME ,
+	FALL_OUT_IND as col_29_0_,
+	OUT_IN_IND as col_43_0_,
+	to_char(EXPNDTR_ITM_DATE, 'mm/dd/yyyy'),
+	to_char(GL_COST_DATE, 'mm/dd/yyyy'),
+	to_char(GL_SALES_DATE, 'mm/dd/yyyy'),
+	MARGIN_REVIEW_FLAG,
+	ACCT_PYBL_INV_NUM,
+	ACCT_RCVBL_INV_NUM,
+	CPM_COMMENT,
+	FINANCE_COMMENT,
+	LINE_COMMENT,
+	ACTN_CD,
+	ACT_ITM_EXIST_FLG,
+	ACTN_STTS_DESC,
+	AP_BILLER_BUC_CD,
+	BS_NUM,
+	BILLER_CNTCT_INFO_DESC,
+	BILL_TO_CNTRY_DESC,
+	BILL_TO_STATE_DESC,
+	BUC_NAME,
+	CTGRY_DESC,
+	CONTRACT_NUMBER,
+	CNTRCTL_SRVCS_BUS_LN_CD,
+	CST_ACCT_CRDT_AMT,
+	CST_ACCT_DBT_AMT,
+	CST_MRGN_NUM,
+	CS_LINE_TYPE,
+	CS_PO_NUM,
+	CS_RGN_DESC,
+	CS_SUBRGN_DESC,
+	CUST_PO_NUM,
+	DOC_NUM,
+	EQPMNT_ID,
+	ERP_EVNT_DESC,
+	ERP_TRAN_STTS_VAL,
+	EXTRA_WRK_BUS_RSN_DESC,
+	EXTWRK_BUS_RSN_ID,
+	EXT_WRK_SHP_TO_ST_DNS_ID,
+	GL_BTCH_NAME,
+	GL_JRNL_ENTRY_HDR_ID,
+	GL_JRNL_ENTRY_LN_ID,
+	GL_JRNL_SRC_NAME,
+	HDR_DESC,
+	HIST_ERP_FLG,
+	ICAM_CONTRACT_CM,
+	ICAM_MRGN_RT_AMT,
+	ICAM_MARGIN_RATE_STAT,
+	ICAM_PERSISTENT_ID,
+	IDENTIFIER_KEY,
+	IC_LE,
+	IC_ME,
+	INV_CTGRY_ID,
+	JE_HEADER_LINE,
+	JOB_FSR_NUMBER,
+	JRNL_ENTRY_HDR_LN_CD,
+	LINE_NUMBER,
+	LIST_PR_AMT,
+	OFS_EVENT_DESC,
+	OFS_EVENT_END_DATE,
+	OFS_EVENT_ID,
+	OFS_EVENT_START_DATE,
+	OFS_EVENT_TYPE_NAME,
+	OPN_ITM_EXIST_FLG,
+	ORG_ID,
+	ORIG_TRAN_NUM,
+	PART_NUMBER,
+	PRTS_LN_NUM,
+	PRTS_SLS_ORDR_NUM,
+	PRTS_SHP_FRM_LE_CD,
+	PO_DESCRIPTION,
+	PO_NUMBER,
+	PR_LIST_ID,
+	PROJ_ID,
+	PRCHS_ORDR_ID,
+	PUSH_TYPE_CD,
+	QTY_NUM,
+	REF_DESC,
+	SLS_ACCT_CRDT_AMT,
+	SLS_ACCT_DBT_AMT,
+	SERVICES_CM,
+	SHP_TO_CNTRY_DESC,
+	SHP_TO_STATE_DESC,
+	SRC_CODE,
+	to_char(SOURCE_DATE_CREATED, 'mm/dd/yyyy'),
+	SUPPLIER_INVOICE_NUM,
+	SUPPLIER_NAME,
+	TASK_NAME,
+	TCHNLGY_CD,
+	TRAN_SRC_DESC,
+	TRNSFR_PR_ADDER_AMT,
+	TRNSFR_PR_AMT,
+	TRNSFR_PR_PCT,
+	VNDR_NAME,
+	case
+	when length(CRTD_BY) = 9  and regexp_like(CRTD_BY,'^[[:digit:]]+$') then
+	Usr_Frst_Name || ',' || Usr_Lst_Name
+	else
+	CRTD_BY
+	end as CRTD_BY,
+	to_char(CRTN_DATE, 'mm/dd/yyyy'),
+	case
+	when length(LST_UPDTD_BY) = 9 and regexp_like(LST_UPDTD_BY,'^[[:digit:]]+$') then
+	Usr_Frst_Name || ',' || Usr_Lst_Name
+	else
+	LST_UPDTD_BY
+	end as LST_UPDTD_BY,
+	to_char(LST_UPDTD_DATE, 'mm/dd/yyyy'),
+	sls_acct_dbt_amt,
+	sls_acct_crdt_amt,
+	cst_acct_dbt_amt,
+	cst_acct_crdt_amt,
+    GL_SALES_QTR,
+    GL_COST_QTR
+	from cnfm_get_part_global         
+	</sql>
+
+	<sql id="findRfsReport">
+		select model0_.MODEL_ID,
+		mgmtenty1_.MGMT_ENTY_NAME as col_0_0_,
+		expndtrctg7_.expndtr_ctgry_txt,
+		tranlndtl10_.TRAN_NUM as col_2_0_,
+		tranlndtl10_.TRAN_DATE as col_3_0_,
+		tranlndtl10_.GL_QTR_DESC as col_4_0_,
+		tranlndtl10_.ITM_DESC as col_1_0_,
+		tskcd4_.TSK_CD_NAME,
+		tranlndtl10_.GAAP_SLS_AMT as col_11_0_,
+		tranlndtl10_.GAAP_CST_AMT as col_12_0_,
+		tranlndtl10_.GAAP_CM_AMT,
+		tranlndtl10_.STAT_SLS_AMT as col_13_0_,
+		tranlndtl10_.STAT_CST_AMT as col_14_0_,
+		tranlndtl10_.STAT_CM_AMT,
+		mdlbukt6_.MDL_BUKT_NAME as col_22_0_,
+		ctlgbukt9_.CTLG_BUKT_NAME as col_23_0_,
+		tranlndtl10_.FALL_OUT_IND as col_27_0_,
+		tranlndtl10_.OUT_IN_IND as col_41_0_,
+		tranlndtl10_.EXPNDTR_ITM_DATE,
+		tranlndtl10_.GL_COST_DATE,
+		tranlndtl10_.GL_SALES_DATE,
+		tranlndtl10_.MARGIN_REVIEW_FLAG,
+		tranlndtl10_.ACCT_PYBL_INV_NUM,
+		tranlndtl10_.ACCT_RCVBL_INV_NUM,
+		tranlndtl10_.CPM_COMMENT,
+		tranlndtl10_.FINANCE_COMMENT,
+		tranlndtl10_.LINE_COMMENT,
+		tranlndtl10_.ACTN_CD,
+		tranlndtl10_.ACT_ITM_EXIST_FLG,
+		tranlndtl10_.ACTN_STTS_DESC,
+		tranlndtl10_.AP_BILLER_BUC_CD,
+		tranlndtl10_.BS_NUM,
+		tranlndtl10_.BILLER_CNTCT_INFO_DESC,
+		tranlndtl10_.BILL_TO_CNTRY_DESC,
+		tranlndtl10_.BILL_TO_STATE_DESC,
+		tranlndtl10_.BUC_NAME,
+		tranlndtl10_.CTGRY_DESC,
+		tranlndtl10_.CONTRACT_NUMBER,
+		tranlndtl10_.CNTRCTL_SRVCS_BUS_LN_CD,
+		tranlndtl10_.CST_ACCT_CRDT_AMT,
+		tranlndtl10_.CST_ACCT_DBT_AMT,
+		tranlndtl10_.CST_MRGN_NUM,
+		tranlndtl10_.CS_LINE_TYPE,
+		tranlndtl10_.CS_PO_NUM,
+		tranlndtl10_.CS_RGN_DESC,
+		tranlndtl10_.CS_SUBRGN_DESC,
+		tranlndtl10_.CUST_PO_NUM,
+		tranlndtl10_.DOC_NUM,
+		tranlndtl10_.EQPMNT_ID,
+		tranlndtl10_.ERP_EVNT_DESC,
+		tranlndtl10_.ERP_TRAN_STTS_VAL,
+		tranlndtl10_.EXTRA_WRK_BUS_RSN_DESC,
+		tranlndtl10_.EXTWRK_BUS_RSN_ID,
+		tranlndtl10_.EXT_WRK_SHP_TO_ST_DNS_ID,
+		tranlndtl10_.GL_BTCH_NAME,
+		tranlndtl10_.GL_JRNL_ENTRY_HDR_ID,
+		tranlndtl10_.GL_JRNL_ENTRY_LN_ID,
+		tranlndtl10_.GL_JRNL_SRC_NAME,
+		tranlndtl10_.HDR_DESC,
+		tranlndtl10_.HIST_ERP_FLG,
+		tranlndtl10_.ICAM_CONTRACT_CM,
+		tranlndtl10_.ICAM_MRGN_RT_AMT,
+		tranlndtl10_.ICAM_MARGIN_RATE_STAT,
+		tranlndtl10_.ICAM_PERSISTENT_ID,
+		tranlndtl10_.IDENTIFIER_KEY,
+		tranlndtl10_.IC_LE,
+		tranlndtl10_.IC_ME,
+		tranlndtl10_.INV_CTGRY_ID,
+		tranlndtl10_.JE_HEADER_LINE,
+		tranlndtl10_.JOB_FSR_NUMBER,
+		tranlndtl10_.JRNL_ENTRY_HDR_LN_CD,
+		tranlndtl10_.LINE_NUMBER,
+		tranlndtl10_.LIST_PR_AMT,
+		tranlndtl10_.OFS_EVENT_DESC,
+		tranlndtl10_.OFS_EVENT_END_DATE,
+		tranlndtl10_.OFS_EVENT_ID,
+		tranlndtl10_.OFS_EVENT_START_DATE,
+		tranlndtl10_.OFS_EVENT_TYPE_NAME,
+		tranlndtl10_.OPN_ITM_EXIST_FLG,
+		tranlndtl10_.ORG_ID,
+		tranlndtl10_.ORIG_TRAN_NUM,
+		tranlndtl10_.PO_DESCRIPTION,
+		tranlndtl10_.PO_NUMBER,
+		tranlndtl10_.PR_LIST_ID,
+		tranlndtl10_.PROJ_ID,
+		tranlndtl10_.PRCHS_ORDR_ID,
+		tranlndtl10_.PUSH_TYPE_CD,
+		tranlndtl10_.QTY_NUM,
+		tranlndtl10_.REF_DESC,
+		tranlndtl10_.SLS_ACCT_CRDT_AMT,
+		tranlndtl10_.SLS_ACCT_DBT_AMT,
+		tranlndtl10_.SERVICES_CM,
+		tranlndtl10_.SHP_TO_CNTRY_DESC,
+		tranlndtl10_.SHP_TO_STATE_DESC,
+		tranlndtl10_.SRC_CODE,
+		tranlndtl10_.SOURCE_DATE_CREATED,
+		tranlndtl10_.SUPPLIER_INVOICE_NUM,
+		tranlndtl10_.SUPPLIER_NAME,
+		tranlndtl10_.TASK_NAME,
+		tranlndtl10_.TCHNLGY_CD,
+		tranlndtl10_.TRAN_SRC_DESC,
+		tranlndtl10_.TRNSFR_PR_ADDER_AMT,
+		tranlndtl10_.TRNSFR_PR_AMT,
+		tranlndtl10_.TRNSFR_PR_PCT,
+		tranlndtl10_.VNDR_NAME,
+		tranlndtl10_.CRTD_BY,
+		tranlndtl10_.CRTN_DATE,
+		tranlndtl10_.LST_UPDTD_BY,
+		tranlndtl10_.LST_UPDTD_DATE
+		from CNFM.CNFM_MODEL model0_,
+		CNFM.CNFM_MGMT_ENTY mgmtenty1_,
+		CNFM.CNFM_MGMT_ENTY_ASGNMNT mgmtentyas2_,
+		CNFM.CNFM_USER baseuser3_,
+		CNFM.CNFM_TSK_CD tskcd4_,
+		CNFM.CNFM_PROJECT project5_,
+		CNFM.CNFM_MDL_BUKT mdlbukt6_,
+		CNFM.CNFM_EXPNDTR_CTGRY_LKP expndtrctg7_,
+		CNFM.CNFM_PRCHS_ORDR prchsordr8_,
+		CNFM.CNFM_CTLG_BUKT ctlgbukt9_,
+		CNFM.CNFM_TRAN_LN_DTL tranlndtl10_
+		left outer join CNFM.CNFM_EQUIPMENT equipment11_ on tranlndtl10_.EQPMNT_ID
+		=
+		equipment11_.EQPMNT_ID
+		left outer join CNFM.CNFM_EW_WRK_BUSRSN ewwrkbusrs12_ on
+		tranlndtl10_.EXTWRK_BUS_RSN_ID =
+		ewwrkbusrs12_.EXTWRK_BUS_RSN_ID
+		where model0_.MODEL_ID = mgmtenty1_.MODEL_ID
+		and mgmtenty1_.MGMT_ENTY_ID = tranlndtl10_.MGMT_ENTY_ID
+		and tranlndtl10_.TSK_CD_ID = tskcd4_.TSK_CD_ID
+		and tranlndtl10_.PROJ_ID = project5_.PROJ_ID
+		and tranlndtl10_.MDL_BUKT_ID = mdlbukt6_.MDL_BUKT_ID
+		and tranlndtl10_.EXPNDTR_CTGRY_ID = expndtrctg7_.EXPNDTR_CTGRY_ID
+		and tranlndtl10_.PRCHS_ORDR_ID = prchsordr8_.PRCHS_ORDR_ID
+		and tranlndtl10_.CTLG_BUKT_ID = ctlgbukt9_.CTLG_BUKT_ID
+		and model0_.MODEL_ID = ?
+		and expndtrctg7_.EXPNDTR_CTGRY_ID = 4
+		and (tranlndtl10_.GL_QTR_DESC between ? and ?)
+		and mgmtentyas2_.PRIMARY_USER_ID = baseuser3_.USER_ID
+		and mgmtentyas2_.MGMT_ENTY_ID = mgmtenty1_.MGMT_ENTY_ID
+		and baseuser3_.USR_SSO_ID = ?
+		and (tskcd4_.TSK_CD_ID not in (87, 88, 89))
+		order by mgmtenty1_.MGMT_ENTY_NAME, tranlndtl10_.TRAN_NUM
+	</sql>
+
+	<sql id="findFsReport">
+		select model0_.MODEL_ID,
+		mgmtenty1_.MGMT_ENTY_NAME as col_0_0_,
+		expndtrctg7_.expndtr_ctgry_txt,
+		tranlndtl10_.TRAN_NUM as col_2_0_,
+		tranlndtl10_.TRAN_DATE as col_3_0_,
+		tranlndtl10_.GL_QTR_DESC as col_4_0_,
+		tranlndtl10_.ITM_DESC as col_1_0_,
+		tskcd4_.TSK_CD_NAME,
+		tranlndtl10_.GAAP_SLS_AMT as col_11_0_,
+		tranlndtl10_.GAAP_CST_AMT as col_12_0_,
+		tranlndtl10_.GAAP_CM_AMT,
+		tranlndtl10_.STAT_SLS_AMT as col_13_0_,
+		tranlndtl10_.STAT_CST_AMT as col_14_0_,
+		tranlndtl10_.STAT_CM_AMT,
+		mdlbukt6_.MDL_BUKT_NAME as col_22_0_,
+		ctlgbukt9_.CTLG_BUKT_NAME as col_23_0_,
+		tranlndtl10_.FALL_OUT_IND as col_27_0_,
+		tranlndtl10_.OUT_IN_IND as col_41_0_,
+
+		tranlndtl10_.EXPNDTR_ITM_DATE,
+		tranlndtl10_.GL_COST_DATE,
+		tranlndtl10_.GL_SALES_DATE,
+		tranlndtl10_.MARGIN_REVIEW_FLAG,
+		tranlndtl10_.ACCT_PYBL_INV_NUM,
+		tranlndtl10_.ACCT_RCVBL_INV_NUM,
+		tranlndtl10_.CPM_COMMENT,
+		tranlndtl10_.FINANCE_COMMENT,
+		tranlndtl10_.LINE_COMMENT,
+		tranlndtl10_.ACTN_CD,
+		tranlndtl10_.ACT_ITM_EXIST_FLG,
+		tranlndtl10_.ACTN_STTS_DESC,
+		tranlndtl10_.AP_BILLER_BUC_CD,
+		tranlndtl10_.BS_NUM,
+		tranlndtl10_.BILLER_CNTCT_INFO_DESC,
+		tranlndtl10_.BILL_TO_CNTRY_DESC,
+		tranlndtl10_.BILL_TO_STATE_DESC,
+		tranlndtl10_.BUC_NAME,
+		tranlndtl10_.CTGRY_DESC,
+		tranlndtl10_.CONTRACT_NUMBER,
+		tranlndtl10_.CNTRCTL_SRVCS_BUS_LN_CD,
+		tranlndtl10_.CST_ACCT_CRDT_AMT,
+		tranlndtl10_.CST_ACCT_DBT_AMT,
+		tranlndtl10_.CST_MRGN_NUM,
+		tranlndtl10_.CS_LINE_TYPE,
+		tranlndtl10_.CS_PO_NUM,
+		tranlndtl10_.CS_RGN_DESC,
+		tranlndtl10_.CS_SUBRGN_DESC,
+		tranlndtl10_.CUST_PO_NUM,
+		tranlndtl10_.DOC_NUM,
+		tranlndtl10_.EQPMNT_ID,
+		tranlndtl10_.ERP_EVNT_DESC,
+		tranlndtl10_.ERP_TRAN_STTS_VAL,
+		tranlndtl10_.EXTRA_WRK_BUS_RSN_DESC,
+		tranlndtl10_.EXTWRK_BUS_RSN_ID,
+		tranlndtl10_.EXT_WRK_SHP_TO_ST_DNS_ID,
+		tranlndtl10_.GL_BTCH_NAME,
+		tranlndtl10_.GL_JRNL_ENTRY_HDR_ID,
+		tranlndtl10_.GL_JRNL_ENTRY_LN_ID,
+		tranlndtl10_.GL_JRNL_SRC_NAME,
+		tranlndtl10_.HDR_DESC,
+		tranlndtl10_.HIST_ERP_FLG,
+		tranlndtl10_.ICAM_CONTRACT_CM,
+		tranlndtl10_.ICAM_MRGN_RT_AMT,
+		tranlndtl10_.ICAM_MARGIN_RATE_STAT,
+		tranlndtl10_.ICAM_PERSISTENT_ID,
+		tranlndtl10_.IDENTIFIER_KEY,
+		tranlndtl10_.IC_LE,
+		tranlndtl10_.IC_ME,
+		tranlndtl10_.INV_CTGRY_ID,
+		tranlndtl10_.JE_HEADER_LINE,
+		tranlndtl10_.JOB_FSR_NUMBER,
+		tranlndtl10_.JRNL_ENTRY_HDR_LN_CD,
+		tranlndtl10_.LINE_NUMBER,
+		tranlndtl10_.LIST_PR_AMT,
+		tranlndtl10_.OFS_EVENT_DESC,
+		tranlndtl10_.OFS_EVENT_END_DATE,
+		tranlndtl10_.OFS_EVENT_ID,
+		tranlndtl10_.OFS_EVENT_START_DATE,
+		tranlndtl10_.OFS_EVENT_TYPE_NAME,
+		tranlndtl10_.OPN_ITM_EXIST_FLG,
+		tranlndtl10_.ORG_ID,
+		tranlndtl10_.ORIG_TRAN_NUM,
+		tranlndtl10_.PO_DESCRIPTION,
+		tranlndtl10_.PO_NUMBER,
+		tranlndtl10_.PR_LIST_ID,
+		tranlndtl10_.PROJ_ID,
+		tranlndtl10_.PRCHS_ORDR_ID,
+		tranlndtl10_.PUSH_TYPE_CD,
+		tranlndtl10_.QTY_NUM,
+		tranlndtl10_.REF_DESC,
+		tranlndtl10_.SLS_ACCT_CRDT_AMT,
+		tranlndtl10_.SLS_ACCT_DBT_AMT,
+		tranlndtl10_.SERVICES_CM,
+		tranlndtl10_.SHP_TO_CNTRY_DESC,
+		tranlndtl10_.SHP_TO_STATE_DESC,
+		tranlndtl10_.SRC_CODE,
+		tranlndtl10_.SOURCE_DATE_CREATED,
+		tranlndtl10_.SUPPLIER_INVOICE_NUM,
+		tranlndtl10_.SUPPLIER_NAME,
+		tranlndtl10_.TASK_NAME,
+		tranlndtl10_.TCHNLGY_CD,
+		tranlndtl10_.TRAN_SRC_DESC,
+		tranlndtl10_.TRNSFR_PR_ADDER_AMT,
+		tranlndtl10_.TRNSFR_PR_AMT,
+		tranlndtl10_.TRNSFR_PR_PCT,
+		tranlndtl10_.VNDR_NAME,
+		tranlndtl10_.CRTD_BY,
+		tranlndtl10_.CRTN_DATE,
+		tranlndtl10_.LST_UPDTD_BY,
+		tranlndtl10_.LST_UPDTD_DATE
+
+		from CNFM.CNFM_MODEL model0_,
+		CNFM.CNFM_MGMT_ENTY mgmtenty1_,
+		CNFM.CNFM_MGMT_ENTY_ASGNMNT mgmtentyas2_,
+		CNFM.CNFM_USER baseuser3_,
+		CNFM.CNFM_TSK_CD tskcd4_,
+		CNFM.CNFM_PROJECT project5_,
+		CNFM.CNFM_MDL_BUKT mdlbukt6_,
+		CNFM.CNFM_EXPNDTR_CTGRY_LKP expndtrctg7_,
+		CNFM.CNFM_PRCHS_ORDR prchsordr8_,
+		CNFM.CNFM_CTLG_BUKT ctlgbukt9_,
+		CNFM.CNFM_TRAN_LN_DTL tranlndtl10_
+		left outer join CNFM.CNFM_EQUIPMENT equipment11_ on tranlndtl10_.EQPMNT_ID
+		=
+		equipment11_.EQPMNT_ID
+		left outer join CNFM.CNFM_EW_WRK_BUSRSN ewwrkbusrs12_ on
+		tranlndtl10_.EXTWRK_BUS_RSN_ID =
+		ewwrkbusrs12_.EXTWRK_BUS_RSN_ID
+		where model0_.MODEL_ID = mgmtenty1_.MODEL_ID
+		and mgmtenty1_.MGMT_ENTY_ID = tranlndtl10_.MGMT_ENTY_ID
+		and tranlndtl10_.TSK_CD_ID = tskcd4_.TSK_CD_ID
+		and tranlndtl10_.PROJ_ID = project5_.PROJ_ID
+		and tranlndtl10_.MDL_BUKT_ID = mdlbukt6_.MDL_BUKT_ID
+		and tranlndtl10_.EXPNDTR_CTGRY_ID = expndtrctg7_.EXPNDTR_CTGRY_ID
+		and tranlndtl10_.PRCHS_ORDR_ID = prchsordr8_.PRCHS_ORDR_ID
+		and tranlndtl10_.CTLG_BUKT_ID = ctlgbukt9_.CTLG_BUKT_ID
+		and model0_.MODEL_ID = ?
+		and expndtrctg7_.EXPNDTR_CTGRY_ID = 3
+		and (tranlndtl10_.GL_QTR_DESC between ? and ?)
+		and mgmtentyas2_.PRIMARY_USER_ID = baseuser3_.USER_ID
+		and mgmtentyas2_.MGMT_ENTY_ID = mgmtenty1_.MGMT_ENTY_ID
+		and baseuser3_.USR_SSO_ID = ?
+		and (tskcd4_.TSK_CD_ID not in (87, 88, 89))
+		order by mgmtenty1_.MGMT_ENTY_NAME, tranlndtl10_.TRAN_NUM
+	</sql>
+
+	<sql id="findInCsReport">
+	select MODEL_ID,
+	MGMT_ENTY_NAME,
+	PA_EXPNDTR_TYPE,
+	TRAN_NUM,
+	to_char(TRAN_DATE, 'mm/dd/yyyy'),
+	GL_QTR_DESC,
+	ITM_DESC,
+	TSK_CD_NAME,
+	GAAP_SLS_AMT,
+	GAAP_CST_AMT,
+	GAAP_CM_AMT,
+	STAT_SLS_AMT,
+	STAT_CST_AMT,
+	STAT_CM_AMT,
+	MDL_BUKT_NAME,
+	CTLG_BUKT_NAME,
+	FALL_OUT_IND,
+	OUT_IN_IND,
+	to_char(EXPNDTR_ITM_DATE, 'mm/dd/yyyy'),
+	to_char(GL_COST_DATE, 'mm/dd/yyyy'),
+	to_char(GL_SALES_DATE, 'mm/dd/yyyy'),
+	MARGIN_REVIEW_FLAG,
+	ACCT_PYBL_INV_NUM,
+	ACCT_RCVBL_INV_NUM,
+	CPM_COMMENT,
+	FINANCE_COMMENT,
+	LINE_COMMENT,
+	ORIG_EXPNDTR_CTGRY,
+	ACTN_CD,
+	ACT_ITM_EXIST_FLG,
+	ACTN_STTS_DESC,
+	AP_BILLER_BUC_CD,
+	BS_NUM,
+	BILLER_CNTCT_INFO_DESC,
+	BILL_TO_CNTRY_DESC,
+	BILL_TO_STATE_DESC,
+	BUC_NAME,
+	CTGRY_DESC,
+	CONTRACT_NUMBER,
+	CNTRCTL_SRVCS_BUS_LN_CD,
+	CST_ACCT_CRDT_AMT,
+	CST_ACCT_DBT_AMT,
+	CST_MRGN_NUM,
+	CS_LINE_TYPE,
+	CS_PO_NUM,
+	CS_RGN_DESC,
+	CS_SUBRGN_DESC,
+	CUST_PO_NUM,
+	DOC_NUM,
+	EQPMNT_ID,
+	ERP_EVNT_DESC,
+	ERP_TRAN_STTS_VAL,
+	EXTRA_WRK_BUS_RSN_DESC,
+	EXTWRK_BUS_RSN_ID,
+	EXT_WRK_SHP_TO_ST_DNS_ID,
+	GL_BTCH_NAME,
+	GL_JRNL_ENTRY_HDR_ID,
+	GL_JRNL_ENTRY_LN_ID,
+	GL_JRNL_SRC_NAME,
+	HDR_DESC,
+	HIST_ERP_FLG,
+	ICAM_CONTRACT_CM,
+	ICAM_MRGN_RT_AMT,
+	ICAM_MARGIN_RATE_STAT,
+	ICAM_PERSISTENT_ID,
+	IDENTIFIER_KEY,
+	IC_LE,
+	IC_ME,
+	INV_CTGRY_ID,
+	JE_HEADER_LINE,
+	JOB_FSR_NUMBER,
+	JRNL_ENTRY_HDR_LN_CD,
+	LINE_NUMBER,
+	LIST_PR_AMT,
+	OFS_EVENT_DESC,
+	to_char(OFS_EVENT_END_DATE, 'mm/dd/yyyy'),
+	OFS_EVENT_ID,
+	to_char(OFS_EVENT_START_DATE, 'mm/dd/yyyy'),
+	OFS_EVENT_TYPE_NAME,
+	OPN_ITM_EXIST_FLG,
+	ORG_ID,
+	ORIG_TRAN_NUM,
+	PO_DESCRIPTION,
+	PO_NUMBER,
+	PR_LIST_ID,
+	PROJ_ID,
+	PRCHS_ORDR_ID,
+	PUSH_TYPE_CD,
+	QTY_NUM,
+	REF_DESC,
+	SLS_ACCT_CRDT_AMT,
+	SLS_ACCT_DBT_AMT,
+	SERVICES_CM,
+	SHP_TO_CNTRY_DESC,
+	SHP_TO_STATE_DESC,
+	SRC_CODE,
+	to_char(SOURCE_DATE_CREATED, 'mm/dd/yyyy'),
+	SUPPLIER_INVOICE_NUM,
+	SUPPLIER_NAME,
+	TASK_NAME,
+	TCHNLGY_CD,
+	TRAN_SRC_DESC,
+	TRNSFR_PR_ADDER_AMT,
+	TRNSFR_PR_AMT,
+	TRNSFR_PR_PCT,
+	VNDR_NAME,
+	case
+	when length(CRTD_BY) = 9 and regexp_like(CRTD_BY,'^[[:digit:]]+$') then
+	Usr_Frst_Name || ',' || Usr_Lst_Name
+	else
+	CRTD_BY
+	end as CRTD_BY,
+	to_char(CRTN_DATE, 'mm/dd/yyyy'),
+	case
+	when length(LST_UPDTD_BY) = 9 and regexp_like(LST_UPDTD_BY,'^[[:digit:]]+$') then
+	Usr_Frst_Name || ',' || Usr_Lst_Name
+	else
+	LST_UPDTD_BY
+	end as LST_UPDTD_BY,
+	to_char(LST_UPDTD_DATE, 'mm/dd/yyyy'),
+	lgl_enty_name,
+	eqpmnt_ser_num,
+	sls_acct_dbt_amt,
+	sls_acct_crdt_amt,
+	cst_acct_dbt_amt,
+	cst_acct_crdt_amt,
+    GL_SALES_QTR,
+    GL_COST_QTR
+	from CNFM_GET_CS_DLOAD_GLOBAL
+	
+	</sql>
+
+	<sql id="findOpenItemByModelId">
+		select mgmtenty0_.MODEL_ID,
+		mgmtenty0_.MGMT_ENTY_NAME,
+		expndtrctg4_.EXPNDTR_CTGRY_TXT,
+		tranlndtl1_.TRAN_NUM,
+		opnitm2_.OPN_ITM_ID,
+		case
+		when opnitm2_.OPN_STATUS = 'C' then
+		'Closed'
+		else
+		'Open'
+		end,
+		tranlndtl1_.itm_desc,
+		opnitm2_.OPEN_REASON,
+		opnitm2_.OPEN_COMMENT,
+		opnitm2_.OPEN_DATE,
+		opnitm2_.OPEN_QTR,
+		opnitm2_.CLOSE_REASON,
+		opnitm2_.CLOSE_COMMENT,
+		opnitm2_.CLOSE_DATE,
+		opnitm2_.CLOSE_QTR,
+		opnitm2_.DEBIT_GL_AC_NO,
+		opnitm2_.CREDIT_GL_AC_NO,
+		opnitm2_.GAAP_SALES,
+		opnitm2_.GAAP_COST,
+		opnitm2_.ITM_TYPE_ID,
+		case
+		when length(opnitm2_.crtd_by) = 9 and regexp_like(opnitm2_.crtd_by,'^[[:digit:]]+$') then
+		cnfmUser.Usr_Frst_Name || ',' || cnfmUser.Usr_Lst_Name
+		else
+		opnitm2_.crtd_by
+		end as CRTD_BY,
+		opnitm2_.CRTN_DATE,
+		case
+		when length(opnitm2_.LST_UPDTD_BY) = 9 and regexp_like(opnitm2_.LST_UPDTD_BY,'^[[:digit:]]+$') then
+		cnfmUser.Usr_Frst_Name || ',' || cnfmUser.Usr_Lst_Name
+		else
+		opnitm2_.LST_UPDTD_BY
+		end as LST_UPDTD_BY,
+		opnitm2_.LST_UPDTD_DATE,
+		cnfmUser.Usr_Frst_Name,
+		cnfmUser.Usr_Lst_Name,
+		opnitm2_.ME_NAME as col_15_0_ 
+		from CNFM.CNFM_MGMT_ENTY mgmtenty0_,
+		CNFM.CNFM_TRAN_LN_DTL tranlndtl1_,
+		CNFM.CNFM_OPN_ITM opnitm2_,
+		CNFM.CNFM_TSK_CD tskcd3_,
+		CNFM.CNFM_EXPNDTR_CTGRY_LKP expndtrctg4_,
+		CNFM.Cnfm_User cnfmUser
+		where mgmtenty0_.MGMT_ENTY_ID = tranlndtl1_.MGMT_ENTY_ID
+		and tranlndtl1_.TRAN_ID = opnitm2_.TRAN_ID
+		and tranlndtl1_.TSK_CD_ID = tskcd3_.TSK_CD_ID
+		and tranlndtl1_.EXPNDTR_CTGRY_ID = expndtrctg4_.EXPNDTR_CTGRY_ID
+		and tranlndtl1_.MGMT_ENTY_ID in
+		(select mgmtenty5_.MGMT_ENTY_ID
+		from CNFM.CNFM_MGMT_ENTY mgmtenty5_
+		where mgmtenty5_.MODEL_ID = ?)
+		and opnitm2_.OPN_STATUS = ?
+		and opnitm2_.MODEL_ID=?
+		and cnfmUser.Usr_Sso_Id = opnitm2_.CRTD_BY
+		order by mgmtenty0_.MGMT_ENTY_NAME,
+		opnitm2_.OPN_STATUS,
+		expndtrctg4_.EXPNDTR_CTGRY_TXT,
+		tranlndtl1_.TRAN_NUM,
+		opnitm2_.OPN_ITM_ID
+	</sql>
+
+	<sql id="findActionItemByModelId">
+		select actnitm2_.MODLE_ID,
+		mgmtenty0_.MGMT_ENTY_NAME,
+		expndtrctg4_.EXPNDTR_CTGRY_TXT,
+		tranlndtl1_.TRAN_NUM,
+		actnitm2_.ACTN_ITM_ID,
+		case
+		when actnitm2_.ACN_STATUS = 'C' then
+		'Closed'
+		else
+		'Open'
+		end,
+		tranlndtl1_.itm_desc,
+		actnitm2_.ACT_OPEN_REASON,
+		actnitm2_.ACT_OPEN_COMMENT,
+		actnitm2_.ACT_OPEN_DATE,
+		actnitm2_.ACT_OPEN_QTR,
+		actnitm2_.ACT_CLOSE_REASON,
+		actnitm2_.ACT_CLOSE_COMMENT,
+		actnitm2_.ACT_CLOSE_DATE,
+		actnitm2_.ACT_CLOSE_QTR,
+		case
+		when length(actnitm2_.crtd_by) = 9 and regexp_like(actnitm2_.crtd_by,'^[[:digit:]]+$') then
+		cnfmUser.Usr_Frst_Name || ',' || cnfmUser.Usr_Lst_Name
+		else
+		actnitm2_.crtd_by
+		end as CRTD_BY,
+		actnitm2_.CRTN_DATE,
+		case
+		when length(actnitm2_.lst_updtd_by) = 9 and regexp_like(actnitm2_.lst_updtd_by,'^[[:digit:]]+$') then
+		cnfmUser.Usr_Frst_Name || ',' || cnfmUser.Usr_Lst_Name
+		else
+		actnitm2_.lst_updtd_by
+		end as LST_UPDTD_BY,
+		actnitm2_.LST_UPDTD_DATE,
+		cnfmUser.Usr_Frst_Name,
+		cnfmUser.Usr_Lst_Name
+
+		from CNFM.CNFM_MGMT_ENTY mgmtenty0_,
+		CNFM.CNFM_TRAN_LN_DTL tranlndtl1_,
+		CNFM.CNFM_ACTN_ITM actnitm2_,
+		CNFM.CNFM_TSK_CD tskcd3_,
+		CNFM.CNFM_EXPNDTR_CTGRY_LKP expndtrctg4_,
+		CNFM.Cnfm_User cnfmUser
+		where mgmtenty0_.MGMT_ENTY_ID = tranlndtl1_.MGMT_ENTY_ID
+		and tranlndtl1_.TRAN_ID = actnitm2_.TRAN_ID
+		and tranlndtl1_.TSK_CD_ID = tskcd3_.TSK_CD_ID
+		and tranlndtl1_.EXPNDTR_CTGRY_ID = expndtrctg4_.EXPNDTR_CTGRY_ID
+		and actnitm2_.MODLE_ID = ?
+		and actnitm2_.ACN_STATUS = ?
+		and cnfmUser.Usr_Sso_Id = actnitm2_.CRTD_BY
+		order by mgmtenty0_.MGMT_ENTY_NAME,
+		actnitm2_.ACN_STATUS,
+		expndtrctg4_.EXPNDTR_CTGRY_TXT,
+		tranlndtl1_.TRAN_NUM,
+		actnitm2_.ACTN_ITM_ID
+	</sql>
+
+	<sql id="findTranIdsByMeQtr">
+		select tranlndtl.tranId as tranId
+		from TranLnDtl tranlndtl
+		where tranlndtl.mgmtEnty.mgmtEntyId = ?
+		and tranlndtl.glQtrDesc = ?
+	</sql>
+	
+	<sql id="updateTranLockByMeQtr">
+		update cnfm_tran_ln_dtl ctld
+		set ctld.is_locked = 'Y'
+		where ctld.mgmt_enty_id = ?
+		and ctld.gl_qtr_desc = ?
+	</sql>
+
+	<sql id="findSummaryData">
+		select MGMT_ENTY_NAME,
+		TOTALS_120030100,
+		TOTALS_120030101,
+		TOTALS_120030102,
+		TOTALS_120030103,
+		TOTALS_120030104,
+		GAAP_SLS,
+		GAAP_CST,
+		STAT_SLS,
+		STAT_CST,
+		BILLING,
+		OPN_GAAP_SLS,
+		OPN_GAAP_CST,
+		OPN_BILL_BASE,
+		DEFF_REV,
+		LGL_ENTY_NAME,
+		MGMT_ENTY_ID
+		from CNFM_GET_ART_DLOAD_GLOBAL
+	</sql>
+
+	<sql id="findSummaryMeData">
+		select model3_.MODEL_ID as col_0_0_,
+		expndtrctg0_.EXPNDTR_CTGRY_ID as col_1_0_,
+		expndtrctg0_.expndtr_ctgry_txt,
+		SUM(tranlndtl1_.GAAP_SLS_AMT) as
+		col_2_0_,
+		SUM(tranlndtl1_.GAAP_CST_AMT) as col_3_0_,
+		SUM(tranlndtl1_.STAT_SLS_AMT) as col_4_0_,
+		SUM(tranlndtl1_.STAT_CST_AMT) as col_5_0_,
+		SUM(nvl(tranlndtl1_.BS_NUM,0.00) +
+		nvl(tranlndtl1_.AMOUNT,0.00)) as col_6_0_,
+		tranlndtl1_.MARGIN_REVIEW_FLAG
+		from
+		CNFM.CNFM_EXPNDTR_CTGRY_LKP expndtrctg0_,
+		CNFM.CNFM_TRAN_LN_DTL
+		tranlndtl1_,
+		CNFM.CNFM_MGMT_ENTY mgmtenty2_,
+		CNFM.CNFM_MODEL model3_
+		where tranlndtl1_.EXPNDTR_CTGRY_ID = expndtrctg0_.EXPNDTR_CTGRY_ID
+		and
+		tranlndtl1_.MGMT_ENTY_ID = mgmtenty2_.MGMT_ENTY_ID
+		and model3_.MODEL_ID
+		= mgmtenty2_.MODEL_ID
+		and model3_.MODEL_ID = ?
+		and
+		mgmtenty2_.MGMT_ENTY_NAME = ?
+		--and (tranlndtl1_.GL_QTR_DESC between and )
+		and tranlndtl1_.MARGIN_REVIEW_FLAG in ('INCLUDED', 'EXCLUDED')
+		and (tranlndtl1_.TSK_CD_ID not in (87, 88, 89))
+		group by
+		model3_.MODEL_ID,
+		expndtrctg0_.EXPNDTR_CTGRY_ID,
+		expndtrctg0_.expndtr_ctgry_txt,
+		MARGIN_REVIEW_FLAG
+		order by
+		expndtrctg0_.EXPNDTR_CTGRY_ID
+	</sql>
+
+	<sql id="findMeOpenItemData">
+	select opnitm2_.open_comment,
+       tranlndtl1_.MARGIN_REVIEW_FLAG,
+       expndtrctg4_.expndtr_ctgry_txt,
+       tskcd3_.tsk_cd_name,
+       opnitm2_.GAAP_SALES,
+       opnitm2_.OPEN_DATE,
+       opnitm2_.OPEN_REASON,
+       opnitm2_.me_name
+  from CNFM.CNFM_MGMT_ENTY         mgmtenty0_,
+       CNFM.CNFM_TRAN_LN_DTL       tranlndtl1_,
+       CNFM.CNFM_OPN_ITM           opnitm2_,
+       CNFM.CNFM_TSK_CD            tskcd3_,
+       CNFM.CNFM_EXPNDTR_CTGRY_LKP expndtrctg4_,
+       CNFM.Cnfm_User              cnfmUser
+ where mgmtenty0_.MGMT_ENTY_ID = tranlndtl1_.MGMT_ENTY_ID
+   and tranlndtl1_.TRAN_ID = opnitm2_.TRAN_ID
+   and tranlndtl1_.TSK_CD_ID = tskcd3_.TSK_CD_ID
+   and tranlndtl1_.EXPNDTR_CTGRY_ID = expndtrctg4_.EXPNDTR_CTGRY_ID
+   and tranlndtl1_.MGMT_ENTY_ID in
+       (select mgmtenty5_.MGMT_ENTY_ID
+          from CNFM.CNFM_MGMT_ENTY mgmtenty5_
+         where mgmtenty5_.MODEL_ID = ?)
+   and opnitm2_.OPN_STATUS = ?
+   and cnfmUser.Usr_Sso_Id = opnitm2_.CRTD_BY
+ order by mgmtenty0_.MGMT_ENTY_NAME,
+          opnitm2_.crtn_date,
+          expndtrctg4_.EXPNDTR_CTGRY_TXT
+	</sql>
+
+	<sql id="findMeInventoryData">
+		select model_id,
+		mgmt_enty_name,
+		tran_num,
+		orig_tran_num,
+		itm_desc,
+		margin_review_flag,
+		tsk.tsk_cd_name,
+		gaap_cst_amt,
+		tran_date add_to_inventory,
+		orig_expndtr_ctgry,
+		(select tran_date 
+		from cnfm_tran_ln_dtl
+		where to_char(orig_tran_num) = tran.tran_num
+		and tsk_cd_id in (87, 88, 89)
+		and gaap_cst_amt + tran.gaap_cst_amt = 0
+		and stat_cst_amt + tran.stat_cst_amt = 0
+		and orig_tran_num is not null
+		and orig_tran_num != 0) remove_from_inventory,
+		tran.GL_SALES_QTR,
+		tran.GL_COST_QTR
+		from cnfm_tran_ln_dtl tran, cnfm_tsk_cd tsk, cnfm_mgmt_enty mgmt
+		where mgmt.mgmt_enty_id = tran.mgmt_enty_id
+		and tran.tsk_cd_id = tsk.tsk_cd_id
+		and mgmt.model_id = ?
+		and tran.GL_COST_QTR = ?
+		and tsk.tsk_cd_id in (87, 88, 89) -- inventory task codes
+		and (orig_tran_num is null or orig_tran_num = 0)
+	</sql>
+	
+	<sql id="findFromMailAddr">
+	select cu.usr_email_id
+	from cnfm_user cu
+	where cu.usr_sso_id = ?
+	</sql>
+	<sql id="findMailAddress">
+	select usr.usr_email_id
+	from cnfm_mgmt_enty mgmt,
+	cnfm_mgmt_enty_asgnmnt asg,
+	cnfm_usr_role_rltd rltd,
+	cnfm_role rl,
+	cnfm_user usr
+	where mgmt.mgmt_enty_id = asg.mgmt_enty_id
+	and primary_user_id = usr.user_id
+	and rltd.role_id = rl.role_id
+	and usr.user_id = rltd.user_id
+	and actv_ind_flg = 'Y'
+	and model_id = ?
+	and rl.role_id = ?
+	</sql>
+	<sql id="getAllMeDetailInfo">
+	select mgmt.mgmtEntyId,
+	mgmt.mgmtEntyName
+	from MgmtEnty mgmt,
+	MgmtEntyAsgnmnt asg,
+	BaseUser usr
+	where mgmt.mgmtEntyId = asg.mgmtEnty.mgmtEntyId
+	and asg.userByPrimaryUserId.userId = usr.userId
+	and mgmt.model.modelId = ?
+	and usr.usrSsoId=?
+	</sql>
+	
+	
+	<sql id="findOpenItemByME">
+	select tranlndtl1_.ITM_DESC as col_0_0_,
+       tranlndtl1_.MARGIN_REVIEW_FLAG as col_1_0_,
+       expndtrctg4_.EXPNDTR_CTGRY_TXT as col_2_0_,
+       tskcd3_.TSK_CD_NAME as col_3_0_,
+       opnitm2_.GAAP_SALES as col_4_0_,
+       opnitm2_.OPEN_DATE as col_5_0_,
+       openType6_.ITM_TYPE_DESC as col_6_0_,
+       opnitm2_.ME_NAME as col_7_0_,
+       tranlndtl1_.TRAN_NUM as col_8_0_,
+       legalentit5_.LGL_ENTY_NAME as col_9_0_,
+       opnitm2_.DEBIT_GL_AC_NO as col_10_0_,
+       opnitm2_.CREDIT_GL_AC_NO as col_11_0_,
+       opnitm2_.STAT_SALES      as col_12_0_,
+       opnitm2_.STAT_COST       as col_13_0_,
+       opnitm2_.GAAP_COST       as col_14_0_,
+       opnitm2_.OPEN_COMMENT    as col_15_0_
+  from CNFM.CNFM_MGMT_ENTY         mgmtenty0_,
+       CNFM.CNFM_TRAN_LN_DTL       tranlndtl1_,
+       CNFM.CNFM_OPN_ITM           opnitm2_,
+       CNFM.CNFM_TSK_CD            tskcd3_,
+       CNFM.CNFM_EXPNDTR_CTGRY_LKP expndtrctg4_,
+       CNFM.CNFM_LEGAL_ENTITY      legalentit5_,
+       CNFM.CNFM_OPEN_ITEM_TYPE    openType6_
+ where tranlndtl1_.TRAN_ID = opnitm2_.TRAN_ID
+   and tranlndtl1_.TSK_CD_ID = tskcd3_.TSK_CD_ID
+   and opnitm2_.ITM_TYPE_ID=openType6_.ITM_TYPE_ID
+   and tranlndtl1_.EXPNDTR_CTGRY_ID = expndtrctg4_.EXPNDTR_CTGRY_ID
+   and (opnitm2_.ME_NAME in
+       (select mgmtenty5_.MGMT_ENTY_NAME
+           from CNFM.CNFM_MGMT_ENTY mgmtenty5_
+          where mgmtenty5_.MODEL_ID = ?))
+   and opnitm2_.OPN_STATUS = 'O'
+   and opnitm2_.model_id = ?
+   and mgmtenty0_.MGMT_ENTY_ID in (:meIds)
+   and mgmtenty0_.LGL_ENTY_ID = legalentit5_.LGL_ENTY_ID
+   and opnitm2_.ME_NAME = mgmtenty0_.mgmt_enty_name
+ order by opnitm2_.ME_NAME,
+          opnitm2_.OPEN_DATE,
+          expndtrctg4_.EXPNDTR_CTGRY_TXT
+	</sql>
+</sqls>

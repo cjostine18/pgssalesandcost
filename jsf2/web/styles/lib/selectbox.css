@@ -1,0 +1,20 @@
+div.selectbox-wrapper {
+	border: #ccc 1px solid; position: absolute; text-align: left; z-index:100; padding:0; background-color:#fff; margin: -10px 0px 0px 185px; width: auto;  max-height: 200px; overflow: auto; 
+}
+div.selectbox-wrapper ul {
+padding:0; margin:0; list-style-type:none;
+}
+div.selectbox-wrapper ul li.selected {
+	background-color: #7a7a7a;
+	color:#fff;
+}
+div.selectbox-wrapper ul li.current {
+	background-color: #7a7a7a;
+	color:#fff;
+}
+div.selectbox-wrapper ul li {
+	padding:2px; list-style-type: none; margin: 0px; display: block; cursor: pointer; font:13px/20px "GEInspiraPitch", Arial, Helvetica;color:#968b7d
+}
+input.selectbox{font:13px/30px "GEInspiraPitch", Arial, Helvetica; margin: 0px 5px 10px 0px; padding:2px 0 0 5px; line-height:30px;color:#968b7d; height:30px; width: 190px; display: block; background:url(../../images/ge_sprite.png) right -392px!important; border:0 none;cursor: pointer; }
+.search-results .paging .rt div.selectbox-wrapper { margin: 32px 0px 0px 107px; *margin: 32px 0px 0px -85px;  }
+.home-content .paging .rt div.selectbox-wrapper { margin: 32px 0px 0px 107px; *margin: 32px 0px 0px -85px;  }

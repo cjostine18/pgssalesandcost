@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>User Legal Acknowledgement</title>
+<script>
+	$(function() {
+		// Uniform form element decorator
+		$("input, checkbox").uniform();
+		$('select').selectbox();
+		//toggleElement('#adv-search-home-btn', '#search-filter');
+		//$('#offerings-filter .filter-item:eq(0)').click();
+		//$('.scrollbar').scrollbar();
+	});
+</script>
+</head>
+<body>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:sec="http://www.springframework.org/security/tags">
+<link href="./styles/common.css" type="text/css" rel="stylesheet"/>
+<link href="./styles/commonPagesStyle.css" type="text/css"
+	rel="stylesheet"/>
+<link href="./styles/lib/fonts.css" type="text/css" rel="stylesheet"/>
+<link href="./styles/lib/uniform.default.css" type="text/css"
+	rel="stylesheet"/>
+<link href="./styles/lib/selectbox.css" type="text/css" rel="stylesheet"/>
+<script src="./scripts/lib/jquery.min.js" type="text/javascript"
+	language="javascript"></script>
+<script src="./scripts/lib/jquery.uniform.min.js" type="text/javascript"
+	language="javascript"></script>
+<script src="./scripts/common.js" type="text/javascript"
+	language="jscript"></script>
+<script src="./scripts/lib/jquery.selectbox-0.5.js"
+	type="text/javascript" language="javascript"></script>
+	<f:view>
+		<div class="wrapper">
+			<div class="container">
+				<div class="inner-container">
+					<div class="role-header">
+						<div class="top-links">
+							<p class="welcome">
+								Welcome,
+								<sec:authentication property="principal.username" />
+							</p>
+							<p class="logout">
+								<h:form>
+									<h:commandLink value="LOGOUT" action="#{loginBean.exitApp }" />
+								</h:form>
+							</p>
+						</div>
+						<div class="role-logo-panel">
+							<h1 class="logo">
+								<span>GE Energy</span>
+							</h1>
+							<h2 class="logo-text">
+								<big class="fltLt">Contract Financial Inputs Reconciliation Manager - ConFIRM</big> <br /> <small>User
+									Legal Acknowledgement</small>
+							</h2>
+						</div>
+					</div>
+					<div class="content role-sel" style="height:600px;">
+						<div class="shadow home-content" align="left">
+							<h:form id="legalagreement" style="width: 65%">
+								<h1>User Legal Acknowledgement</h1>
+								<br/>
+								<h:outputLabel styleClass="legalTextarea" style="color: #8A8A8A"
+									value="This application is hosted on a U.S.-based server and may not be used in connection with any transaction involving a 'sanctioned' country. Use of a U.S.-
+									based application for transactions involving sanctioned countries could be considered 'facilitation' of trade with the sanctioned country, which is prohibited by
+									 U.S. law.  Click on the following link to go to the U.S. International Trade Controls Support Central community:" />
+								<p>
+									<br/>
+									<a href="http://supportcentral.ge.com/products/sup_products.asp?prod_id=25521">
+									   <font size="3px" color="#3b73b9" style="'GEInspiraPitch', Arial, Helvetica;">http://supportcentral.ge.com/products/sup_products.asp?prod_id=25521</font></a>
+								</p>
+								<br/>		
+								<p>
+									<h:outputLabel styleClass="legalTextarea"
+										style="color: #8A8A8A"
+										value="Accessing technical data or engineering tools hosted on a U.S.-based application or server from outside the U.S. is considered an export of that technical data 
+										or engineering tool. It is your obligation to comply with all relevant U.S. export laws, including restricting access to technical data or on-line engineering 
+										systems, applications or tools which have been designated as 'export controlled' by the business."></h:outputLabel>
+								</p>	
+									<br/>
+								<p>	
+									<h:outputLabel styleClass="legalTextarea"
+										style="color: #8A8A8A"
+										value="For questions related to the proper classification of GE technology, equipment, and software, contact the applicable businesses' Chief Engineer's Office. For 
+										questions on compliance with US export laws, contact either your businesses' International Trade Controls Administrator or assigned counsel."></h:outputLabel>
+								</p>
+								<br/>
+								<p>
+									
+									<h:commandButton id="reject" value="   Cancel   "
+										action="#{loginBean.rejectLegal}"></h:commandButton>
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									<h:commandButton id="accept" value="  Ok  "
+										action="#{loginBean.acceptLegal}"></h:commandButton>
+								</p>	
+									<br/>
+							</h:form>
+						</div>
+					</div>
+					<div id="footer">
+	    			<ui:insert name="footer" >
+	    	 		 <ui:include src="/pages/commons/footer.xhtml" />
+	    			</ui:insert>
+    	   			 </div>
+				</div>
+			</div>
+		</div>
+	</f:view>
+	</ui:composition>
+</body>
+</html>

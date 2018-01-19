@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+     http://www.springframework.org/schema/beans 
+     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+     http://www.springframework.org/schema/context 
+     http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	   <!-- Mail message and confirm_resources -->	
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
+	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="parentMessageSource" ref="confirmMessageSource" />
+		<property name="basenames">
+			<list>
+				<value>classpath:mailMessage</value>
+			</list>
+		</property>
+		<property name="fileEncodings" value="UTF-8" />
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
+		
+	<bean id="confirmMessageSource" class="com.ge.energy.common.AppMessageSource">
+		<property name="basename" value="confirm_resources" />
+ 	</bean>
+ 	<bean id="messageAccessor" class="org.springframework.context.support.MessageSourceAccessor">
+ 		<constructor-arg ref="messageSource"/>
+ 	</bean>
+ 	<!-- Mail message -->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="#{messageAccessor.getMessage('smtpServer')}"/>
+	</bean>	
+</beans>
